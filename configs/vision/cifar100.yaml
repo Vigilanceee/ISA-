@@ -1,0 +1,129 @@
+name: vision-cifar100
+description: Digital, Hybrid, and Physical ViT at three model sizes.
+paths:
+  data: data/cifar100
+  output_root: outputs/vision/cifar100
+environment:
+  EKV_LUT_SIZE: "8192"
+  EKV_TRITON_BLOCK_K: "8"
+  EKV_CUDA_SHARED_BACKWARD: "1"
+defaults:
+  module: isa.vision.train
+  success_marker: "{output_root}/.completed/{experiment}.json"
+  global_batch_size: 128
+  batch_arg: batch-size
+  resume_arg: resume
+  args:
+    data: "{data}"
+    dataset: cifar100
+    epochs: 300
+    lr: 3.0e-4
+    weight-decay: 0.05
+    warmup-epochs: 10
+    label-smoothing: 0.1
+    num-workers: 4
+    seed: 42
+order:
+  - digital_s
+  - digital_m
+  - digital_l
+  - hybrid_s
+  - hybrid_m
+  - hybrid_l
+  - physical_s
+  - physical_m
+  - physical_l
+experiments:
+  digital_s:
+    description: Digital ViT-S (d=192).
+    args: {model: standard_vit, model-scale: tiny, output: "{output_root}/digital_s"}
+    completion: "{output_root}/digital_s/standard_vit/best_checkpoint.pth"
+    resume: "{output_root}/digital_s/standard_vit/last_checkpoint.pth"
+  digital_m:
+    description: Digital ViT-M (d=256).
+    args: {model: standard_vit, model-scale: mid, output: "{output_root}/digital_m"}
+    completion: "{output_root}/digital_m/standard_vit/best_checkpoint.pth"
+    resume: "{output_root}/digital_m/standard_vit/last_checkpoint.pth"
+  digital_l:
+    description: Digital ViT-L (d=384).
+    args: {model: standard_vit, model-scale: small, output: "{output_root}/digital_l"}
+    completion: "{output_root}/digital_l/standard_vit/best_checkpoint.pth"
+    resume: "{output_root}/digital_l/standard_vit/last_checkpoint.pth"
+  hybrid_s:
+    description: Hybrid ViT-S with physical up-projection and digital down-projection.
+    args:
+      model: hybrid_vit
+      model-scale: tiny
+      output: "{output_root}/hybrid_s"
+      baseline-init-checkpoint: "{output_root}/digital_s/standard_vit/best_checkpoint.pth"
+      baseline-match-steps: 20
+      baseline-match-batches: 2
+      ekv-init: centered_reverse_tia
+      voltage-map-init: data
+    completion: "{output_root}/hybrid_s/hybrid_vit/best_checkpoint.pth"
+    resume: "{output_root}/hybrid_s/hybrid_vit/last_checkpoint.pth"
+  hybrid_m:
+    description: Hybrid ViT-M with physical up-projection and digital down-projection.
+    args:
+      model: hybrid_vit
+      model-scale: mid
+      output: "{output_root}/hybrid_m"
+      baseline-init-checkpoint: "{output_root}/digital_m/standard_vit/best_checkpoint.pth"
+      baseline-match-steps: 20
+      baseline-match-batches: 2
+      ekv-init: centered_reverse_tia
+      voltage-map-init: data
+    completion: "{output_root}/hybrid_m/hybrid_vit/best_checkpoint.pth"
+    resume: "{output_root}/hybrid_m/hybrid_vit/last_checkpoint.pth"
+  hybrid_l:
+    description: Hybrid ViT-L with physical up-projection and digital down-projection.
+    args:
+      model: hybrid_vit
+      model-scale: small
+      output: "{output_root}/hybrid_l"
+      baseline-init-checkpoint: "{output_root}/digital_l/standard_vit/best_checkpoint.pth"
+      baseline-match-steps: 20
+      baseline-match-batches: 2
+      ekv-init: centered_reverse_tia
+      voltage-map-init: data
+    completion: "{output_root}/hybrid_l/hybrid_vit/best_checkpoint.pth"
+    resume: "{output_root}/hybrid_l/hybrid_vit/last_checkpoint.pth"
+  physical_s:
+    description: Physical ViT-S with two Flash-EKV CIM projections.
+    args:
+      model: physical_vit
+      model-scale: tiny
+      output: "{output_root}/physical_s"
+      baseline-init-checkpoint: "{output_root}/digital_s/standard_vit/best_checkpoint.pth"
+      baseline-match-steps: 20
+      baseline-match-batches: 2
+      ekv-init: centered_reverse_tia
+      voltage-map-init: data
+    completion: "{output_root}/physical_s/physical_vit/best_checkpoint.pth"
+    resume: "{output_root}/physical_s/physical_vit/last_checkpoint.pth"
+  physical_m:
+    description: Physical ViT-M with two Flash-EKV CIM projections.
+    args:
+      model: physical_vit
+      model-scale: mid
+      output: "{output_root}/physical_m"
+      baseline-init-checkpoint: "{output_root}/digital_m/standard_vit/best_checkpoint.pth"
+      baseline-match-steps: 20
+      baseline-match-batches: 2
+      ekv-init: centered_reverse_tia
+      voltage-map-init: data
+    completion: "{output_root}/physical_m/physical_vit/best_checkpoint.pth"
+    resume: "{output_root}/physical_m/physical_vit/last_checkpoint.pth"
+  physical_l:
+    description: Physical ViT-L with two Flash-EKV CIM projections.
+    args:
+      model: physical_vit
+      model-scale: small
+      output: "{output_root}/physical_l"
+      baseline-init-checkpoint: "{output_root}/digital_l/standard_vit/best_checkpoint.pth"
+      baseline-match-steps: 20
+      baseline-match-batches: 2
+      ekv-init: centered_reverse_tia
+      voltage-map-init: data
+    completion: "{output_root}/physical_l/physical_vit/best_checkpoint.pth"
+    resume: "{output_root}/physical_l/physical_vit/last_checkpoint.pth"

@@ -1,0 +1,68 @@
+# Fixed, device-invariant training recipes.
+#
+# Optuna varies learning rate and physical initialization for each
+# device/model pair. Weight decay, label smoothing, scheduler, quantization,
+# and physical equations remain fixed within each architecture.
+training:
+  mlp:
+    optimizer: adamw
+    lr: 0.001
+    weight_decay: 0.0
+    label_smoothing: 0.0
+    grad_clip: 1.0
+    epochs: 200
+    trials: 20
+    prune_start_epoch: 8
+    prune_acc_threshold: 0.70
+    bf16: true
+    channels_last: false
+
+  vgg8:
+    optimizer: adamw
+    lr: 0.01
+    weight_decay: 0.00005
+    label_smoothing: 0.05
+    grad_clip: 1.0
+    epochs: 200
+    trials: 20
+    prune_start_epoch: 8
+    prune_acc_threshold: 0.15
+    bf16: true
+    channels_last: true
+
+search:
+  reram:
+    lr:
+      mlp: [1.0e-4, 3.0e-3]
+      vgg8: [5.0e-5, 2.0e-3]
+    init_center: [0.22, 0.80]
+    init_half_width: [0.01, 0.35]
+    tia_r: [100.0, 10000000.0]
+  pcm:
+    lr:
+      mlp: [1.0e-4, 3.0e-3]
+      vgg8: [1.0e-5, 5.0e-3]
+    init_center: [0.002, 0.10]
+    init_half_width: [0.0005, 0.04]
+    tia_r: [100.0, 10000000.0]
+  stt:
+    lr:
+      mlp: [2.0e-4, 5.0e-3]
+      vgg8: [3.0e-4, 2.0e-2]
+    init_center: [0.20, 2.94]
+    init_half_width: [0.01, 1.20]
+    tia_r: [100.0, 10000000.0]
+  fefet:
+    lr:
+      mlp: [2.0e-4, 3.0e-3]
+      vgg8: [5.0e-4, 2.0e-2]
+    init_center: [0.50, 4.50]
+    init_half_width: [0.03, 1.50]
+    tia_r: [100.0, 1000000.0]
+  flash:
+    lr:
+      mlp: [2.0e-4, 3.0e-3]
+      vgg8: [5.0e-4, 2.0e-2]
+    init_center: [0.50, 4.50]
+    init_half_width: [0.03, 1.50]
+    tia_r: [100.0, 10000000.0]

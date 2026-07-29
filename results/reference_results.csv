@@ -1,0 +1,6 @@
+domain,training_data,evaluation,metric,digital_s,digital_m,digital_l,hybrid_s,hybrid_m,hybrid_l,physical_s,physical_m,physical_l
+Vision,CIFAR-100,CIFAR-100 test,Top-1 Accuracy,67.98,69.45,69.30,67.52,69.54,71.36,67.70,69.61,72.19
+Vision,ImageNet-200,ImageNet-200 validation,Top-1 Accuracy,72.43,72.57,73.64,69.33,72.63,76.71,72.71,75.80,77.19
+Language,OpenWebText,OpenWebText validation,Perplexity,77.18,69.40,62.85,75.51,68.64,54.47,68.44,66.10,54.25
+Language,OpenWebText,TinyStories validation,Perplexity,57.25,48.45,45.36,64.70,47.68,39.22,49.22,48.88,40.84
+Language,OpenWebText,BLiMP,Accuracy,70.06,70.39,70.53,69.12,70.77,71.45,69.64,71.48,72.63

@@ -1,0 +1,68 @@
+{
+  "model_size_mapping": {
+    "vision": {
+      "S": 192,
+      "M": 256,
+      "L": 384
+    },
+    "language": {
+      "S": 192,
+      "M": 384,
+      "L": 768
+    }
+  },
+  "results": [
+    {
+      "domain": "Vision",
+      "training_data": "CIFAR-100",
+      "evaluation": "CIFAR-100 test",
+      "metric": "Top-1 Accuracy",
+      "digital": [67.98, 69.45, 69.30],
+      "hybrid": [67.52, 69.54, 71.36],
+      "physical": [67.70, 69.61, 72.19]
+    },
+    {
+      "domain": "Vision",
+      "training_data": "ImageNet-200",
+      "evaluation": "ImageNet-200 validation",
+      "metric": "Top-1 Accuracy",
+      "digital": [72.43, 72.57, 73.64],
+      "hybrid": [69.33, 72.63, 76.71],
+      "physical": [72.71, 75.80, 77.19]
+    },
+    {
+      "domain": "Language",
+      "training_data": "OpenWebText",
+      "evaluation": "OpenWebText validation",
+      "metric": "Perplexity",
+      "digital": [77.18, 69.40, 62.85],
+      "hybrid": [75.51, 68.64, 54.47],
+      "physical": [68.44, 66.10, 54.25]
+    },
+    {
+      "domain": "Language",
+      "training_data": "OpenWebText",
+      "evaluation": "TinyStories validation",
+      "metric": "Perplexity",
+      "digital": [57.25, 48.45, 45.36],
+      "hybrid": [64.70, 47.68, 39.22],
+      "physical": [49.22, 48.88, 40.84]
+    },
+    {
+      "domain": "Language",
+      "training_data": "OpenWebText",
+      "evaluation": "BLiMP",
+      "metric": "Accuracy",
+      "digital": [70.06, 70.39, 70.53],
+      "hybrid": [69.12, 70.77, 71.45],
+      "physical": [69.64, 71.48, 72.63]
+    }
+  ],
+  "language_protocol": {
+    "openwebtext_validation_tokens": 89665664,
+    "tinystories_tokens": 999999,
+    "context_length": 128,
+    "tinystories_stride": 64,
+    "blimp_examples": 67000
+  }
+}

@@ -1,0 +1,153 @@
+name: language-openwebtext
+description: Digital, Hybrid, and Physical GPT-style models at three sizes.
+paths:
+  data: data/language
+  output_root: outputs/language/openwebtext
+environment:
+  TOKENIZERS_PARALLELISM: "false"
+  PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
+  EKV_LUT_SIZE: "4096"
+  EKV_TRITON_BLOCK_K: "8"
+  EKV_CUDA_SHARED_BACKWARD: "1"
+defaults:
+  module: isa.language.train
+  success_marker: "{output_root}/.completed/{experiment}.json"
+  batch_arg: batch_size
+  resume_arg: resume
+  args:
+    tokenizer_name: "{data}/gpt2"
+    local_files_only: true
+    train_text: "{data}/openwebtext/owt_train.txt"
+    val_text: "{data}/openwebtext/owt_valid.txt"
+    output_dir: "{output_root}"
+    max_steps: 15000
+    match_steps: 200
+    lm_steps: 15000
+    warmup_steps: 500
+    seq_len: 128
+    grad_clip: 1.0
+    amp: true
+    eval_freq: 1000
+    save_freq: 2500
+    print_freq: 20
+    num_workers: 4
+    seed: 42
+order:
+  - digital_s
+  - digital_m
+  - digital_l
+  - hybrid_s
+  - hybrid_m
+  - hybrid_l
+  - physical_s
+  - physical_m
+  - physical_l
+experiments:
+  digital_s:
+    description: Digital language model S (d=192).
+    global_batch_size: 2048
+    args: {size: tiny, model_type: standard, lr: 3.0e-3}
+    completion: "{output_root}/tiny_standard/final.pt"
+    resume: "{output_root}/tiny_standard/checkpoint_*.pt"
+  digital_m:
+    description: Digital language model M (d=384).
+    global_batch_size: 1536
+    args: {size: mid, model_type: standard, lr: 2.0e-3}
+    completion: "{output_root}/mid_standard/final.pt"
+    resume: "{output_root}/mid_standard/checkpoint_*.pt"
+  digital_l:
+    description: Digital language model L (d=768).
+    global_batch_size: 1024
+    args: {size: small, model_type: standard, lr: 1.5e-3}
+    completion: "{output_root}/small_standard/final.pt"
+    resume: "{output_root}/small_standard/checkpoint_*.pt"
+  hybrid_s:
+    description: Hybrid language model S.
+    global_batch_size: 2048
+    args:
+      size: tiny
+      model_type: hybrid
+      lr: 3.0e-3
+      baseline_checkpoint: "{output_root}/tiny_standard/final.pt"
+    completion: "{output_root}/tiny_hybrid/final.pt"
+    resume: "{output_root}/tiny_hybrid/checkpoint_*.pt"
+  hybrid_m:
+    description: Hybrid language model M.
+    global_batch_size: 1536
+    args:
+      size: mid
+      model_type: hybrid
+      lr: 2.0e-3
+      baseline_checkpoint: "{output_root}/mid_standard/final.pt"
+    completion: "{output_root}/mid_hybrid/final.pt"
+    resume: "{output_root}/mid_hybrid/checkpoint_*.pt"
+  hybrid_l:
+    description: Hybrid language model L.
+    global_batch_size: 1024
+    args:
+      size: small
+      model_type: hybrid
+      lr: 1.5e-3
+      baseline_checkpoint: "{output_root}/small_standard/final.pt"
+    completion: "{output_root}/small_hybrid/final.pt"
+    resume: "{output_root}/small_hybrid/checkpoint_*.pt"
+  physical_s:
+    description: Physical language model S.
+    global_batch_size: 2048
+    args:
+      size: tiny
+      model_type: physical
+      lr: 3.0e-3
+      baseline_checkpoint: "{output_root}/tiny_standard/final.pt"
+    completion: "{output_root}/tiny_physical/final.pt"
+    resume: "{output_root}/tiny_physical/checkpoint_*.pt"
+  physical_m:
+    description: Physical language model M.
+    global_batch_size: 1536
+    args:
+      size: mid
+      model_type: physical
+      lr: 2.0e-3
+      baseline_checkpoint: "{output_root}/mid_standard/final.pt"
+    completion: "{output_root}/mid_physical/final.pt"
+    resume: "{output_root}/mid_physical/checkpoint_*.pt"
+  physical_l:
+    description: Physical language model L.
+    global_batch_size: 1024
+    args:
+      size: small
+      model_type: physical
+      lr: 1.5e-3
+      baseline_checkpoint: "{output_root}/small_standard/final.pt"
+    completion: "{output_root}/small_physical/final.pt"
+    resume: "{output_root}/small_physical/checkpoint_*.pt"
+evaluation:
+  module: isa.language.evaluate
+  args:
+    owt-valid: "{data}/openwebtext/owt_valid.txt"
+    benchmark-data-dir: "{data}/benchmarks"
+    tokenizer: "{data}/gpt2"
+    local-files-only: true
+    batch-size: 32
+    ppl-stride: 64
+    tinystories-max-tokens: 1000000
+    tasks: [owt, tinystories, blimp]
+    resume: true
+  models:
+    tiny_standard: {args: {checkpoint: "{output_root}/tiny_standard/best.pt", output: "{output_root}/benchmark_results/tiny_standard.json"}}
+    mid_standard: {args: {checkpoint: "{output_root}/mid_standard/best.pt", output: "{output_root}/benchmark_results/mid_standard.json"}}
+    small_standard: {args: {checkpoint: "{output_root}/small_standard/best.pt", output: "{output_root}/benchmark_results/small_standard.json"}}
+    tiny_hybrid: {args: {checkpoint: "{output_root}/tiny_hybrid/best.pt", output: "{output_root}/benchmark_results/tiny_hybrid.json"}}
+    mid_hybrid: {args: {checkpoint: "{output_root}/mid_hybrid/best.pt", output: "{output_root}/benchmark_results/mid_hybrid.json"}}
+    small_hybrid: {args: {checkpoint: "{output_root}/small_hybrid/best.pt", output: "{output_root}/benchmark_results/small_hybrid.json"}}
+    tiny_physical: {args: {checkpoint: "{output_root}/tiny_physical/best.pt", output: "{output_root}/benchmark_results/tiny_physical.json"}}
+    mid_physical: {args: {checkpoint: "{output_root}/mid_physical/best.pt", output: "{output_root}/benchmark_results/mid_physical.json"}}
+    small_physical: {args: {checkpoint: "{output_root}/small_physical/best.pt", output: "{output_root}/benchmark_results/small_physical.json"}}
+  postprocess:
+    - module: isa.language.summarize
+      args:
+        result-dir: "{output_root}/benchmark_results"
+        output: "{output_root}/benchmark_results/language_results.md"
+    - module: isa.language.validate_results
+      args:
+        result-dir: "{output_root}/benchmark_results"
