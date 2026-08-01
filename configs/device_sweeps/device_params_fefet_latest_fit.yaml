@@ -76,17 +76,14 @@ stt:
 # FeFET Vth 使用原始 [0.0, 5.0]V 区间；速度饱和项为 1 + V / V_sat
 
 fefet:
-  # Legacy, deliberately poorer measured-data fit used by the selected
-  # MLP/VGG8 result table.  The later clean fit remains available in
-  # device_params_fefet_latest_fit.yaml.
-  I_S: 11.0725    # μA
-  n: 1.112106     # subthreshold factor
+  # State-fit statistics supplied for the clean paper-parameter baseline.
+  I_S: 6.3026     # μA
+  n: 1.0280       # subthreshold factor
   U_T: 0.026      # V  — thermal voltage (300K)
   V_D: 0.1        # V  — drain voltage
-  A_lk: 0.001369  # exact L-K cubic coupling
-  B_lk: 1.29224   # exact L-K linear coupling
-  V_sat: 8.2624   # V  — velocity saturation denominator 1 + V / V_sat
-  theta_sat: 2.562803  # retained as fit provenance; not used by current kernel
+  A_lk: 0.8214    # exact L-K cubic coupling
+  B_lk: 1.3171    # exact L-K linear coupling
+  V_sat: 5.0      # V  — velocity saturation denominator 1 + V / V_sat
   w_min: 0.0
   w_max: 5.0
   init_center: 2.5

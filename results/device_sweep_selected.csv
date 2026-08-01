@@ -1,0 +1,11 @@
+architecture,dataset,device,best_val_accuracy,best_val_percent,best_epoch,epochs,trial,learning_rate,label_smoothing,weight_decay,tia_r_ohm,initialization_parameter,initialization_value,fefet_fit_group,source_run,source_kind
+MLP,MNIST,ReRAM,0.9795,97.95,47,50,0,0.00013177025,0.073268148,0.000019817369,29209.942,w_init_max,0.055429803,not_applicable,20260525_122217/mlp/mnist/reram,summary_and_trial_csv
+MLP,MNIST,PCM,0.9799,97.99,41,50,14,0.001413395,0.051704551,0.000065402097,633383.12,w_init_max,0.17500166,not_applicable,20260525_122217/mlp/mnist/pcm,summary_and_trial_csv
+MLP,MNIST,STT,0.9718,97.18,49,50,8,0.00015344224,0.047899811,0.0000022320739,10497.144,w_init_max,0.13888446,not_applicable,20260525_122217/mlp/mnist/stt,summary_and_trial_csv
+MLP,MNIST,FeFET,0.9499,94.99,48,50,2,0.00018891365,0.07250696,0.0000021975747,60563.235,w_init_max,0.26411641,legacy_poor_fit_20260528,20260528_112334_fefet_flash_focus/mlp/mnist/fefet,summary_and_trial_csv
+MLP,MNIST,Flash,0.9669,96.69,23,50,13,0.0004838909,0.037524159,0.000028342539,2675867.6,w_init_max,0.59745886,not_applicable,20260528_112334_fefet_flash_focus/mlp/mnist/flash,summary_and_trial_csv
+VGG8,CIFAR-10,ReRAM,0.875,87.50,190,200,2,0.000159785,0.012038668,0.000072217549,461.32357,w_init_max,0.05940663,not_applicable,20260525_122217/vgg8/cifar10/reram,summary_and_trial_csv
+VGG8,CIFAR-10,PCM,0.9203,92.03,177,200,12,0.00044810279,0.079049558,0.00003713135,6983712.9,w_init_max,0.012674463,not_applicable,20260525_122217/vgg8/cifar10/pcm,summary_and_trial_csv
+VGG8,CIFAR-10,STT,0.8922,89.22,170,200,17,0.001000001,0.037789361,0.0000010915707,2950.9413,w_init_max,0.083713084,not_applicable,20260525_122217/vgg8/cifar10/stt,summary_and_trial_csv
+VGG8,CIFAR-10,FeFET,0.8379,83.79,193,200,1,0.0037299727,0.057022542,0.000010289164,28159.283,w_init_max,0.73713633,legacy_poor_fit_20260529,20260529_113836_fefet_flash_vgg8_focus/vgg8/cifar10/fefet,summary_and_trial_csv
+VGG8,CIFAR-10,Flash,0.9014,90.14,182,200,10,0.0021589198,0.033024298,0.000064717621,7726407.6,w_init_max,0.93350419,not_applicable,20260529_113836_fefet_flash_vgg8_focus/vgg8/cifar10/flash,trial_csv_recovered

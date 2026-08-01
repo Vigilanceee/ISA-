@@ -8,6 +8,8 @@ feed-forward networks for vision and language models. The repository contains:
 - fused Triton/CUDA kernels for the physical Transformer FFN;
 - ReRAM, PCM, STT, FeFET, and Flash-transistor device studies with MLP and
   VGG8;
+- a measured 24-state verify/write deployment pipeline with activation-aware
+  assignment, fixed-assignment post-training, and cell-wise Monte Carlo;
 - one launcher for single-GPU, 4-GPU, and 8-GPU training, automatic resume,
   and experiment-matrix execution.
 
@@ -197,6 +199,34 @@ python -m isa matrix \
 This runs MLP/MNIST and VGG8/CIFAR-10 for ReRAM, PCM, STT, FeFET, and Flash
 transistor.
 
+The default FeFET entry intentionally uses the older, poorer measured-data fit
+selected for the device comparison (`A_lk=0.001369`, `B_lk=1.29224`,
+`I_S=11.0725`, `n=1.112106`).  The later clean fit is retained as
+[`configs/device_sweeps/device_params_fefet_latest_fit.yaml`](configs/device_sweeps/device_params_fefet_latest_fit.yaml).
+The selected historical results and the later controlled LR search are kept
+separately in [`results/device_sweep_selected.csv`](results/device_sweep_selected.csv)
+and [`results/device_sweep_latest_lr_search.csv`](results/device_sweep_latest_lr_search.csv).
+
+### Measured 24-state deployment
+
+The FG50 path is a deployment experiment, not another analytic device backend.
+It starts from the 72.19% Physical ViT-S checkpoint, performs discrete
+activation-aware verify/write assignment, applies fixed-assignment
+compensation training, and evaluates 200 cell-wise raw-curve Monte Carlo
+realizations.
+
+```bash
+bash experiments/fg50_24state/run_pipeline_2gpu.sh \
+  --runtime /data/fg50_24state_runtime.npz \
+  --checkpoint /checkpoints/physical_vit_s/best_checkpoint.pth \
+  --data /datasets/cifar100 \
+  --gpus 0,1
+```
+
+The full data schema, runtime builder, resume gates, selected parameters, and
+results are documented in
+[`experiments/fg50_24state/README.md`](experiments/fg50_24state/README.md).
+
 ## Reference results
 
 | Benchmark | Metric | Digital S/M/L | Hybrid S/M/L | Physical S/M/L |
@@ -226,6 +256,7 @@ src/isa/
 ├── vision/              # ViT models, training, evaluation, data
 ├── language/            # GPT models, training, evaluation
 ├── device_sweeps/       # MLP/VGG8 Optuna experiments
+├── measured_deployment/ # empirical codebook, assignment, post-training, MC
 └── cli/                 # unified launcher and resume scheduler
 ```
 

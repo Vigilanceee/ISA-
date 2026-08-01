@@ -1,0 +1,7 @@
+stage,variant,accuracy_percent,loss,improvement_pp,topk,max_tokens_per_layer,coord_block,seed,status
+continuous_source,Physical ViT-S,72.19,,,,,,,completed
+qpoint_baseline,24-state center Q-point,54.00,,,,,,,completed
+activation_aware_assignment,a4_k128_m8192_b2,65.44,1.5693384192,11.44,128,8192,2,42,PASS
+fixed_assignment_compensation,b2_attention_fc2_ln_head,71.46,,6.02,,,,42,PASS
+center_curve_evaluation,global_state_center,71.35,1.2308708130,,,,,,completed
+monte_carlo_200,independent_cell_members,66.1091,,,,,,10000-10199,completed

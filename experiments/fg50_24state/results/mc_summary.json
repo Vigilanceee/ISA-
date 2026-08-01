@@ -1,0 +1,22 @@
+{
+  "status": "completed",
+  "sampling": "independent_per_physical_cell_uniform_over_24state_members",
+  "sample_count": 200,
+  "seed_start": 10000,
+  "seed_end": 10199,
+  "seeds_strict_contiguous": true,
+  "accuracy_mean": 66.1091,
+  "accuracy_std": 1.1268456395963853,
+  "accuracy_sem": 0.07968001931090964,
+  "accuracy_mean_ci95_low": 65.95292716215062,
+  "accuracy_mean_ci95_high": 66.26527283784938,
+  "accuracy_min": 60.84,
+  "accuracy_p1": 62.4642,
+  "accuracy_p5": 64.4525,
+  "accuracy_median": 66.245,
+  "accuracy_p95": 67.691,
+  "accuracy_p99": 67.9522,
+  "accuracy_max": 68.25,
+  "center_curve_accuracy": 71.35,
+  "mean_minus_center_pp": -5.2409
+}
