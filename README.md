@@ -199,6 +199,26 @@ python -m isa matrix \
 This runs MLP/MNIST and VGG8/CIFAR-10 for ReRAM, PCM, STT, FeFET, and Flash
 transistor.
 
+### Cross-device prediction trajectories
+
+The VGG8 prediction-trajectory experiment tests whether the five physical
+device implementations retain a common low-dimensional task geometry. It uses
+three seeds, one shared stratified 1,000-image CIFAR-10 probe, joint PCA,
+prediction-direction cosine similarity, and a device/seed distance ratio.
+
+```bash
+bash experiments/prediction_trajectory/run_pipeline_2gpu.sh \
+  --data /path/to/cifar10 \
+  --output-root artifacts/prediction_trajectory \
+  --gpus 0,1
+```
+
+The launcher is resumable at each `(device, seed)` run, saves probabilities
+every five epochs, refuses to download CIFAR-10 inside a compute job, and
+generates source tables plus publication-ready Figure 3b/3c exports. See
+[`experiments/prediction_trajectory/README.md`](experiments/prediction_trajectory/README.md)
+for the complete protocol and interpretation boundary.
+
 The default FeFET entry intentionally uses the older, poorer measured-data fit
 selected for the device comparison (`A_lk=0.001369`, `B_lk=1.29224`,
 `I_S=11.0725`, `n=1.112106`).  The later clean fit is retained as
@@ -256,6 +276,7 @@ src/isa/
 ├── vision/              # ViT models, training, evaluation, data
 ├── language/            # GPT models, training, evaluation
 ├── device_sweeps/       # MLP/VGG8 Optuna experiments
+├── prediction_trajectory/ # cross-device output-space trajectory analysis
 ├── measured_deployment/ # empirical codebook, assignment, post-training, MC
 └── cli/                 # unified launcher and resume scheduler
 ```
