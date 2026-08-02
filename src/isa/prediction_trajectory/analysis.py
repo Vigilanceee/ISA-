@@ -108,6 +108,19 @@ def pairwise_distances(vectors: Iterable[np.ndarray]) -> np.ndarray:
     )
 
 
+def select_endpoint_index(accuracies: np.ndarray, endpoint: str) -> int:
+    """Select the best-validation or final snapshot from one trajectory."""
+
+    values = np.asarray(accuracies, dtype=np.float64)
+    if values.ndim != 1 or values.size == 0 or not np.isfinite(values).all():
+        raise ValueError("endpoint selection requires finite one-dimensional accuracies")
+    if endpoint == "best":
+        return int(np.argmax(values))
+    if endpoint == "final":
+        return int(values.size - 1)
+    raise ValueError(f"unknown endpoint: {endpoint}")
+
+
 def ratio_and_bootstrap(
     between: np.ndarray,
     within: np.ndarray,
@@ -283,6 +296,10 @@ def main() -> None:
     similarity_summary_rows: list[dict[str, object]] = []
     ratio_rows: list[dict[str, object]] = []
     same_epoch_rows: list[dict[str, object]] = []
+    endpoint_run_rows: list[dict[str, object]] = []
+    endpoint_similarity_rows: list[dict[str, object]] = []
+    endpoint_similarity_summary_rows: list[dict[str, object]] = []
+    endpoint_effect_rows: list[dict[str, object]] = []
     milestones = np.asarray([], dtype=np.float64)
     analysis_config = dict(config["analysis"])
     repeats = int(analysis_config["bootstrap_repeats"])
@@ -404,6 +421,87 @@ def main() -> None:
                 }
             )
 
+        for endpoint in ("best", "final"):
+            endpoint_vectors: dict[str, list[np.ndarray]] = {device: [] for device in devices}
+            endpoint_deltas: dict[str, list[np.ndarray]] = {device: [] for device in devices}
+            for device in devices:
+                for seed in seeds:
+                    run = run_lookup[(device, seed)]
+                    index = select_endpoint_index(run.accuracies, endpoint)
+                    vector = run.probabilities[index]
+                    endpoint_vectors[device].append(vector)
+                    endpoint_deltas[device].append(vector - run.probabilities[0])
+                    endpoint_run_rows.append(
+                        {
+                            "endpoint": endpoint,
+                            "device": device,
+                            "seed": seed,
+                            "epoch": int(run.epochs[index]),
+                            "validation_accuracy": float(run.accuracies[index]),
+                            "validation_loss": float(run.losses[index]),
+                        }
+                    )
+
+            device_delta = {device: np.mean(np.stack(endpoint_deltas[device]), axis=0) for device in devices}
+            pair_similarities: list[float] = []
+            for first_index, first in enumerate(devices):
+                for second_index, second in enumerate(devices):
+                    similarity = cosine_similarity(device_delta[first], device_delta[second])
+                    endpoint_similarity_rows.append(
+                        {
+                            "endpoint": endpoint,
+                            "device_i": first,
+                            "device_j": second,
+                            "cosine_similarity": similarity,
+                        }
+                    )
+                    if second_index > first_index:
+                        pair_similarities.append(similarity)
+
+            bootstrap_similarity = np.empty(repeats, dtype=np.float64)
+            for repeat in range(repeats):
+                sampled_delta = {
+                    device: np.mean(
+                        np.stack(
+                            [
+                                endpoint_deltas[device][index]
+                                for index in rng.integers(0, len(seeds), len(seeds))
+                            ]
+                        ),
+                        axis=0,
+                    )
+                    for device in devices
+                }
+                values = [
+                    cosine_similarity(sampled_delta[first], sampled_delta[second])
+                    for first, second in itertools.combinations(devices, 2)
+                ]
+                bootstrap_similarity[repeat] = float(np.nanmean(values))
+            similarity_low, similarity_high = np.nanpercentile(bootstrap_similarity, [2.5, 97.5])
+            endpoint_similarity_summary_rows.append(
+                {
+                    "endpoint": endpoint,
+                    "mean_cross_device_cosine": float(np.nanmean(pair_similarities)),
+                    "ci95_low": float(similarity_low),
+                    "ci95_high": float(similarity_high),
+                    "device_pair_count": len(pair_similarities),
+                    "seed_count_per_device": len(seeds),
+                }
+            )
+
+            between, within = effect_components(endpoint_vectors)
+            ratio, low, high = ratio_and_bootstrap(between, within, repeats=repeats, rng=rng)
+            endpoint_effect_rows.append(
+                {
+                    "endpoint": endpoint,
+                    "device_seed_effect_ratio": ratio,
+                    "ci95_low": low,
+                    "ci95_high": high,
+                    "mean_between_distance": float(between.mean()),
+                    "mean_within_distance": float(within.mean()),
+                }
+            )
+
         write_csv(analysis_dir / "direction_similarity_matrices.csv", similarity_rows)
         write_csv(
             analysis_dir / "direction_similarity_summary.csv",
@@ -411,7 +509,30 @@ def main() -> None:
         )
         write_csv(analysis_dir / "device_seed_effect_ratio.csv", ratio_rows)
         write_csv(analysis_dir / "same_epoch_effect_curve.csv", same_epoch_rows)
+        write_csv(analysis_dir / "endpoint_run_metrics.csv", endpoint_run_rows)
+        write_csv(
+            analysis_dir / "endpoint_direction_similarity_matrices.csv",
+            endpoint_similarity_rows,
+        )
+        write_csv(
+            analysis_dir / "endpoint_direction_similarity_summary.csv",
+            endpoint_similarity_summary_rows,
+        )
+        write_csv(analysis_dir / "endpoint_device_seed_effect.csv", endpoint_effect_rows)
 
+    endpoint_summary = {
+        row["endpoint"]: {
+            "mean_cross_device_cosine": row["mean_cross_device_cosine"],
+            "ci95_low": row["ci95_low"],
+            "ci95_high": row["ci95_high"],
+            "device_seed_effect_ratio": next(
+                effect["device_seed_effect_ratio"]
+                for effect in endpoint_effect_rows
+                if effect["endpoint"] == row["endpoint"]
+            ),
+        }
+        for row in endpoint_similarity_summary_rows
+    }
     summary = {
         "status": "completed" if not missing else "partial",
         "run_count": len(runs),
@@ -422,6 +543,7 @@ def main() -> None:
         "top3_explained_variance": top3,
         "k90": k90,
         "accuracy_milestones": milestones.tolist(),
+        "endpoint_summary": endpoint_summary,
         "distance_normalization": "L2 / sqrt(1000 * 10)",
         "bootstrap_repeats": repeats,
         "bootstrap_unit": "seed resampling for cosine; pair-distance resampling for R",
@@ -440,6 +562,11 @@ seed distances use L2 distance divided by sqrt(1000 x 10). Accuracy-aligned vect
 use linear interpolation at the first milestone crossing. The same-epoch comparison
 uses the nearest checkpoint to the median milestone-crossing epoch.
 
+Endpoint analysis is separate from accuracy alignment. For each run, the best
+checkpoint is the earliest saved snapshot with maximum validation accuracy; the
+final checkpoint is epoch {config["training"]["epochs"]}. Both endpoints report
+cross-device direction similarity and the device/seed effect ratio.
+
 Bootstrap intervals use {repeats} deterministic replicates. With only three seeds,
 they summarize run-to-run stability and are not population-level confidence bounds.
 """
@@ -451,6 +578,10 @@ they summarize run-to-run stability and are not population-level confidence boun
 - Joint PCA top-3 explained variance: {top3:.6f}
 - Components required for 90% variance: {k90}
 - Common accuracy milestones: {", ".join(f"{value:.3f}" for value in milestones) if milestones.size else "not available"}
+- Best-checkpoint mean cross-device cosine: {endpoint_summary.get("best", {}).get("mean_cross_device_cosine", float("nan")):.6f}
+- Best-checkpoint device/seed effect ratio: {endpoint_summary.get("best", {}).get("device_seed_effect_ratio", float("nan")):.6f}
+- Final-checkpoint mean cross-device cosine: {endpoint_summary.get("final", {}).get("mean_cross_device_cosine", float("nan")):.6f}
+- Final-checkpoint device/seed effect ratio: {endpoint_summary.get("final", {}).get("device_seed_effect_ratio", float("nan")):.6f}
 
 Interpretation is intentionally deferred to the completed numerical tables and does
 not assume that device effects are smaller or larger than seed effects.

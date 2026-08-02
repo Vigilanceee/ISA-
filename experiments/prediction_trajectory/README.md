@@ -17,6 +17,8 @@ information-geometric distances, geodesics, InPCA, or weight-space analysis.
   every run.
 - Snapshots: validation metrics and `[1000, 10]` float32 probabilities at epoch
   0 and every 5 epochs.
+- Endpoints: report the earliest maximum-validation snapshot (`best`) and epoch
+  200 (`final`) separately from the common-accuracy milestones.
 - Resume: each run has an atomic last checkpoint and an independent completion
   marker. A restarted matrix skips completed runs and resumes incomplete runs.
 
@@ -61,8 +63,10 @@ artifacts/prediction_trajectory/
 
 The primary outputs are joint PCA coordinates and explained variance, milestone
 cosine-similarity matrices, same-accuracy and same-epoch effect ratios with
-bootstrap intervals, source CSV files, and publication exports in PNG, PDF,
-SVG, and TIFF.
+bootstrap intervals, best/final endpoint direction and effect summaries, source
+CSV files, and publication exports in PNG, PDF, SVG, and TIFF. In Figure 3b an
+open circle marks initialization, a star marks the mean best checkpoint, and a
+diamond marks epoch 200.
 
 ## Interpretation boundary
 

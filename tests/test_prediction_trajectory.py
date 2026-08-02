@@ -7,6 +7,7 @@ from isa.prediction_trajectory.analysis import (
     interpolate_first_crossing,
     joint_pca,
     normalized_distance,
+    select_endpoint_index,
 )
 from isa.prediction_trajectory.protocol import stratified_probe_indices
 
@@ -46,3 +47,9 @@ def test_prediction_metrics_have_expected_scale() -> None:
     second = np.asarray([1.0, 1.0, 0.0, 0.0])
     assert np.isclose(cosine_similarity(first, second), 1.0 / np.sqrt(2.0))
     assert np.isclose(normalized_distance(first, second), 0.5)
+
+
+def test_endpoint_selection_distinguishes_best_and_final() -> None:
+    accuracies = np.asarray([0.10, 0.72, 0.81, 0.79])
+    assert select_endpoint_index(accuracies, "best") == 2
+    assert select_endpoint_index(accuracies, "final") == 3
