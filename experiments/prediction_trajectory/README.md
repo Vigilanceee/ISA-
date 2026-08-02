@@ -89,7 +89,7 @@ not be interpreted as population-level biological confidence intervals.
 - Source data: every quantitative element is traceable to the CSV files under
   `analysis/`; the train/validation/test split and metric definitions are fixed
   in `config.yaml` and the generated methods report.
-- Reviewer risk: three seeds limit interval interpretation, PCA establishes a
-  shared low-dimensional subspace rather than a strict nonlinear manifold, and
-  milestone interpolation is only valid inside the common achieved-accuracy
-  range.
+- Interpretation constraints: three seeds limit interval interpretation; PCA
+  establishes a shared low-dimensional subspace rather than a strict nonlinear
+  manifold; milestone interpolation is only valid inside the common
+  achieved-accuracy range.
