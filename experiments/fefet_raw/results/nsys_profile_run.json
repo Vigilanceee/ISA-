@@ -1,0 +1,79 @@
+{
+  "benchmarks": {
+    "conv3_b1": {
+      "backward": {
+        "maximum_ms": 28.235904693603516,
+        "mean_ms": 28.235904693603516,
+        "median_ms": 28.235904693603516,
+        "minimum_ms": 28.235904693603516
+      },
+      "device_interactions": 75497472,
+      "finite_output_and_gradients": true,
+      "forward": {
+        "maximum_ms": 36.1901741027832,
+        "mean_ms": 36.1901741027832,
+        "median_ms": 36.1901741027832,
+        "minimum_ms": 36.1901741027832
+      },
+      "forward_backward": {
+        "maximum_ms": 64.42607879638672,
+        "mean_ms": 64.42607879638672,
+        "median_ms": 64.42607879638672,
+        "minimum_ms": 64.42607879638672
+      },
+      "median_interactions_per_second": 1171846454.2689848,
+      "peak_allocated_bytes": 9666560,
+      "shape": {
+        "K": 1152,
+        "M": 256,
+        "N": 256
+      },
+      "vgg8_batch": 1
+    }
+  },
+  "config_sha256": "a7f0cacb85af5fd47fce0f25dd867608f74f4cf6ca234554aa13c884c86b60ca",
+  "config_source": "/root/dhz/yuhuihe/computing primitives/configs/device_params.yaml",
+  "configured_backends_before_override": {
+    "conv_backend": "lowrank_planar",
+    "direct_conv_enabled": false,
+    "linear_backend": "lowrank_planar",
+    "lut_enabled": true,
+    "planar_enabled": false,
+    "surrogate_backward_enabled": false,
+    "weight_quant_enabled": null
+  },
+  "dispatch": "FeFETFunction.apply imported directly from fefet_triton.py",
+  "elapsed_seconds": 1.1504039764404297,
+  "enforced_raw_backend": {
+    "conv_backend": "reference",
+    "direct_conv_enabled": false,
+    "linear_backend": "reference",
+    "lut_enabled": false,
+    "planar_enabled": false,
+    "surrogate_backward_enabled": false,
+    "weight_quant_enabled": false
+  },
+  "environment": {
+    "cuda": "12.4",
+    "device_capability": [
+      9,
+      0
+    ],
+    "gpu": "NVIDIA H100 80GB HBM3 MIG 3g.40gb",
+    "python": "3.10.12",
+    "torch": "2.3.0a0+6ddf5cf85e.nv24.04"
+  },
+  "expected_trace_kernels": [
+    "_fefet_fwd_kernel",
+    "_fefet_grad_v_kernel",
+    "_fefet_grad_w_kernel"
+  ],
+  "formula_validation": null,
+  "iterations": 1,
+  "kernel_sha256": "9f01869f9afde1e80fc13d162826e068cf44c41bb5e560e78355a34e45d06102",
+  "kernel_source": "/root/dhz/yuhuihe/computing primitives/devices/fefet_triton.py",
+  "method": "exact FeFET L-K solve plus EKV current with analytical backward",
+  "seed": 20260805,
+  "status": "completed",
+  "warmup": 1
+}

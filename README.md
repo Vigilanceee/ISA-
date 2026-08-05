@@ -30,16 +30,11 @@ fitted Flash-transistor EKV parameter set in
 The current is evaluated with a one-dimensional LUT over
 `ΔV = VGS - Vth`, followed by fused Triton forward and CUDA backward kernels.
 
-This Transformer path is distinct from the low-rank planar approximation used
-in the multi-device MLP/VGG8 study:
-
-| Device | Device-sweep backend | Rank |
-|---|---|---:|
-| ReRAM | factorized | — |
-| PCM | low-rank planar | 2 |
-| STT | factorized | — |
-| FeFET | low-rank planar | 16 |
-| Flash transistor | low-rank planar | 8 |
+The fused Transformer FFN kernel and the multi-device MLP/VGG8 operators are
+independent implementation layers. The device study selects a physical-response
+operator for each of ReRAM, PCM, STT, FeFET, and Flash transistor through its
+own configuration. In particular, the FeFET path exposes the original L-K/EKV
+physical response rather than the Transformer-specific Flash-EKV FFN kernel.
 
 `Flash transistor` refers to the physical device model. PyTorch Flash SDPA
 refers to the digital attention implementation; the two are independent.
@@ -270,7 +265,7 @@ split with context length 128 and stride 64, and all 67,000 BLiMP minimal pairs.
 ```text
 src/isa/
 ├── device_models/       # physical equations and fitted parameters
-├── approximations/      # exact, LUT, node-planar, and low-rank paths
+├── approximations/      # physical-response operator backends
 ├── operators/           # CIMLinear and physical/hybrid FFNs
 ├── kernels/             # Transformer and device-study Triton/CUDA kernels
 ├── vision/              # ViT models, training, evaluation, data

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 import os
@@ -28,14 +29,26 @@ import torch.nn as nn
 import yaml
 from torch.nn.parallel import DistributedDataParallel as DDP
 
+from isa.device_sweeps.backend import (
+    BACKENDS,
+    normalize_backend_parameters,
+)
+from isa.device_sweeps.health import evaluate_training_health
 from isa.device_sweeps.models.mlp import MLP
 from isa.device_sweeps.models.quantization import set_quantization_config
 from isa.device_sweeps.models.vgg8 import VGG8
 from isa.device_sweeps.utils.data_loader import get_cifar10_loaders, get_mnist_loaders
 
-
 DEVICES = ("reram", "pcm", "stt", "fefet", "flash")
 TRANSISTOR_DEVICES = {"fefet", "flash"}
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def distributed() -> bool:
@@ -228,20 +241,24 @@ def write_summary(study: optuna.Study, output: Path) -> None:
             {
                 "trial": trial.number,
                 "state": trial.state.name,
-                "best_val_acc": max(values) if values else "",
+                "best_val_acc": max(values)
+                if values
+                else trial.user_attrs.get("best_val_acc", ""),
                 "last_epoch": max(trial.intermediate_values)
                 if trial.intermediate_values
-                else "",
+                else trial.user_attrs.get("last_epoch", ""),
                 "init_center": trial.params.get("init_center", ""),
                 "init_half_width": trial.params.get("init_half_width", ""),
                 "tia_r": trial.params.get("tia_r", ""),
+                "lr": trial.params.get("lr", ""),
+                "stop_reason": trial.user_attrs.get("stop_reason", ""),
             }
         )
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0]) if rows else [
             "trial", "state", "best_val_acc", "last_epoch",
-            "init_center", "init_half_width", "tia_r",
+            "init_center", "init_half_width", "tia_r", "lr", "stop_reason",
         ])
         writer.writeheader()
         writer.writerows(rows)
@@ -264,6 +281,19 @@ def truncate_trial_log(csv_path: Path, last_committed_epoch: int) -> None:
         writer.writerows(rows)
 
 
+def read_validation_history(
+    csv_path: Path, last_committed_epoch: int
+) -> list[float]:
+    if not csv_path.exists():
+        return []
+    with csv_path.open("r", newline="", encoding="utf-8") as handle:
+        return [
+            float(row["val_acc"])
+            for row in csv.DictReader(handle)
+            if int(row["epoch"]) <= last_committed_epoch
+        ]
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--device", choices=DEVICES, required=True)
@@ -283,13 +313,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-val-steps", type=int, default=0)
     parser.add_argument(
         "--conv-backend",
-        choices=("lut", "node_planar", "lowrank_planar"),
+        choices=BACKENDS,
         default="",
         help="Temporarily override the configured convolution backend.",
     )
     parser.add_argument(
         "--linear-backend",
-        choices=("lut", "node_planar", "lowrank_planar"),
+        choices=BACKENDS,
         default="",
         help="Temporarily override the configured linear backend.",
     )
@@ -302,6 +332,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--fixed-init-center", type=float)
     parser.add_argument("--fixed-init-half-width", type=float)
     parser.add_argument("--fixed-tia-r", type=float)
+    parser.add_argument("--fixed-lr", type=float)
+    parser.add_argument(
+        "--health-pruning",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="Enable VGG8 early-health thresholds; defaults on for FeFET VGG8.",
+    )
+    parser.add_argument("--health-epoch8-min-best", type=float)
+    parser.add_argument("--health-epoch20-min-best", type=float)
+    parser.add_argument("--health-plateau-window", type=int)
+    parser.add_argument("--health-plateau-min-gain", type=float)
     return parser.parse_args()
 
 
@@ -346,6 +387,8 @@ def main() -> None:
         ]
     if args.fixed_tia_r is not None:
         ranges["tia_r"] = [args.fixed_tia_r, args.fixed_tia_r]
+    if args.fixed_lr is not None:
+        ranges["lr"] = [args.fixed_lr, args.fixed_lr]
     epochs = args.epochs or int(fixed["epochs"])
     target_trials = args.trials or int(fixed["trials"])
     bf16 = bool(fixed.get("bf16", True))
@@ -451,10 +494,11 @@ def main() -> None:
         params = dict(device_config[args.device])
         params["init_center"] = float(hp["init_center"])
         params.pop("init_std", None)
-        if args.conv_backend:
-            params["conv_backend"] = args.conv_backend
-        if args.linear_backend:
-            params["linear_backend"] = args.linear_backend
+        params = normalize_backend_parameters(
+            params,
+            conv_backend=args.conv_backend,
+            linear_backend=args.linear_backend,
+        )
         if args.lowrank_rank:
             params["lowrank_rank"] = int(args.lowrank_rank)
         v_min, v_max = (
@@ -496,8 +540,10 @@ def main() -> None:
             label_smoothing=float(fixed["label_smoothing"])
         )
         checkpoint_path = trial_checkpoint(run_directory, trial_number)
+        csv_path = run_directory / f"trial_{trial_number}.csv"
         start_epoch = 1
         best_val = 0.0
+        val_history: list[float] = []
         if bool(trial_info["resuming"]):
             state = torch.load(checkpoint_path, map_location=device)
             raw_model(model).load_state_dict(state["model"])
@@ -506,10 +552,11 @@ def main() -> None:
             start_epoch = int(state["epoch"]) + 1
             best_val = float(state["best_val"])
             if main_process():
-                truncate_trial_log(
-                    run_directory / f"trial_{trial_number}.csv",
-                    int(state["epoch"]),
+                truncate_trial_log(csv_path, int(state["epoch"]))
+                val_history = read_validation_history(
+                    csv_path, int(state["epoch"])
                 )
+            val_history = broadcast(val_history)
 
         if main_process():
             metadata = {
@@ -522,6 +569,15 @@ def main() -> None:
                 "device_params": params,
                 "world_size": world_size(),
             }
+            if args.device == "fefet":
+                kernel_path = (
+                    Path(__file__).resolve().parents[1]
+                    / "kernels/device_sweep/fefet_triton.py"
+                )
+                metadata["device_kernel"] = {
+                    "path": str(kernel_path),
+                    "sha256": sha256_file(kernel_path),
+                }
             with (run_directory / f"trial_{trial_number}_config.json").open(
                 "w", encoding="utf-8"
             ) as handle:
@@ -533,6 +589,12 @@ def main() -> None:
             )
 
         pruned = False
+        prune_reason = ""
+        threshold_pruning = (
+            args.health_pruning
+            if args.health_pruning is not None
+            else args.model == "vgg8" and args.device == "fefet"
+        )
         trial_start = time.perf_counter()
         for epoch in range(start_epoch, epochs + 1):
             if train_sampler is not None:
@@ -559,16 +621,57 @@ def main() -> None:
                 args.max_val_steps,
             )
             scheduler.step()
-            improved = val_acc > best_val
-            best_val = max(best_val, val_acc)
+            val_history.append(val_acc)
+            health = evaluate_training_health(
+                epoch=epoch,
+                train_loss=train_loss,
+                train_acc=train_acc,
+                val_loss=val_loss,
+                val_acc=val_acc,
+                val_history=val_history,
+                threshold_pruning=threshold_pruning,
+                epoch8_min_best=(
+                    args.health_epoch8_min_best
+                    if args.health_epoch8_min_best is not None
+                    else float(fixed.get("health_epoch8_min_best", 0.15))
+                ),
+                epoch20_min_best=(
+                    args.health_epoch20_min_best
+                    if args.health_epoch20_min_best is not None
+                    else float(fixed.get("health_epoch20_min_best", 0.35))
+                ),
+                plateau_window=(
+                    args.health_plateau_window
+                    if args.health_plateau_window is not None
+                    else int(fixed.get("health_plateau_window", 5))
+                ),
+                plateau_min_gain=(
+                    args.health_plateau_min_gain
+                    if args.health_plateau_min_gain is not None
+                    else float(fixed.get("health_plateau_min_gain", 0.02))
+                ),
+            )
+            improved = math.isfinite(val_acc) and val_acc > best_val
+            if math.isfinite(val_acc):
+                best_val = max(best_val, val_acc)
 
             prune_now = False
             if main_process():
-                trial.report(val_acc, epoch)
-                prune_now = (
-                    epoch >= int(fixed["prune_start_epoch"])
-                    and val_acc < float(fixed["prune_acc_threshold"])
-                ) or trial.should_prune()
+                if math.isfinite(val_acc):
+                    trial.report(val_acc, epoch)
+                optuna_prune = (
+                    math.isfinite(val_acc) and trial.should_prune()
+                )
+                prune_now = health.should_stop or optuna_prune
+                prune_reason = (
+                    health.reason
+                    if health.should_stop
+                    else "optuna_pruner" if optuna_prune else ""
+                )
+                if prune_reason:
+                    trial.set_user_attr("stop_reason", prune_reason)
+                trial.set_user_attr("last_epoch", epoch)
+                trial.set_user_attr("best_val_acc", best_val)
                 row = {
                     "epoch": epoch,
                     "train_loss": train_loss,
@@ -579,7 +682,6 @@ def main() -> None:
                     "lr": optimizer.param_groups[0]["lr"],
                     "epoch_seconds": time.perf_counter() - epoch_start,
                 }
-                csv_path = run_directory / f"trial_{trial_number}.csv"
                 write_header = not csv_path.exists()
                 with csv_path.open("a", newline="", encoding="utf-8") as handle:
                     writer = csv.DictWriter(handle, fieldnames=list(row))
@@ -600,6 +702,7 @@ def main() -> None:
                             "optimizer": optimizer.state_dict(),
                             "scheduler": scheduler.state_dict(),
                             "hp": hp,
+                            "stop_reason": prune_reason,
                         },
                         checkpoint_path,
                     )
@@ -619,6 +722,7 @@ def main() -> None:
                     f"[T{trial_number:02d}] E{epoch:03d}/{epochs} "
                     f"train={train_acc:.4f} val={val_acc:.4f} "
                     f"best={best_val:.4f} "
+                    f"health={prune_reason or 'ok'} "
                     f"epoch={row['epoch_seconds']:.1f}s "
                     f"total={time.perf_counter() - trial_start:.0f}s",
                     flush=True,

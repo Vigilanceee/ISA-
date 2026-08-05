@@ -1,0 +1,6 @@
+==PROF== Connected to process 4078 (/usr/bin/python3.10)
+==ERROR== ERR_NVGPUCTRPERM - The user does not have permission to access NVIDIA GPU Performance Counters on the target device 0. For instructions on enabling permissions and to get more information see https://developer.nvidia.com/ERR_NVGPUCTRPERM
+{"backward": {"maximum_ms": 8.2806396484375, "mean_ms": 8.2806396484375, "median_ms": 8.2806396484375, "minimum_ms": 8.2806396484375}, "device_interactions": 262144, "finite_output_and_gradients": true, "forward": {"maximum_ms": 0.830623984336853, "mean_ms": 0.830623984336853, "median_ms": 0.830623984336853, "minimum_ms": 0.830623984336853}, "forward_backward": {"maximum_ms": 9.111263632774353, "mean_ms": 9.111263632774353, "median_ms": 9.111263632774353, "minimum_ms": 9.111263632774353}, "median_interactions_per_second": 28771420.800187945, "peak_allocated_bytes": 159744, "shape": {"K": 64, "M": 64, "N": 64}, "shape_complete": "micro", "vgg8_batch": 1}
+FEFET_RAW_BENCHMARK=/root/dhz/yuhuihe/ISA-results/fefet_raw_benchmark_20260805/results/ncu_profile_run.json
+==PROF== Disconnected from process 4078
+==WARNING== No kernels were profiled.

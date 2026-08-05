@@ -90,21 +90,13 @@ fefet:
   w_min: 0.0
   w_max: 5.0
   init_center: 2.5
-  conv_backend: lowrank_planar
-  linear_backend: lowrank_planar
-  planar_nodes: 32
-  planar_channels_last: true
-  # Formula-fidelity rank: close to the original 32-node physical backend.
-  lowrank_rank: 16
-  lowrank_lut_size: 8192
-  lowrank_v_min: -4.0
-  lowrank_v_max: 4.0
-  lut_enabled: true
+  conv_backend: reference
+  linear_backend: reference
+  raw_kernel_backend: split
+  raw_forward_backend: split_k
+  lut_enabled: false
   planar_enabled: false
   direct_conv_enabled: false
-  lut_size: 8192
-  lut_x_min: -9.0
-  lut_x_max: 4.0
   surrogate_backward_enabled: false
 
 flash:

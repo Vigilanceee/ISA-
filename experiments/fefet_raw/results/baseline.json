@@ -1,0 +1,182 @@
+{
+  "benchmarks": {
+    "conv1_b1": {
+      "backward": {
+        "maximum_ms": 66.54854583740234,
+        "mean_ms": 65.53891296386719,
+        "median_ms": 66.53260803222656,
+        "minimum_ms": 64.02518463134766
+      },
+      "device_interactions": 3538944,
+      "finite_output_and_gradients": true,
+      "forward": {
+        "maximum_ms": 0.4092159867286682,
+        "mean_ms": 0.40824319124221803,
+        "median_ms": 0.40825599431991577,
+        "minimum_ms": 0.40723198652267456
+      },
+      "forward_backward": {
+        "maximum_ms": 66.95606583356857,
+        "mean_ms": 65.94715615510941,
+        "median_ms": 66.93984001874924,
+        "minimum_ms": 64.43417662382126
+      },
+      "median_interactions_per_second": 52867529.99422727,
+      "peak_allocated_bytes": 4339712,
+      "shape": {
+        "K": 27,
+        "M": 1024,
+        "N": 128
+      },
+      "vgg8_batch": 1
+    },
+    "conv3_b1": {
+      "backward": {
+        "maximum_ms": 30.744895935058594,
+        "mean_ms": 29.745644760131835,
+        "median_ms": 30.713407516479492,
+        "minimum_ms": 28.25823974609375
+      },
+      "device_interactions": 75497472,
+      "finite_output_and_gradients": true,
+      "forward": {
+        "maximum_ms": 36.20870590209961,
+        "mean_ms": 36.19202651977539,
+        "median_ms": 36.19219207763672,
+        "minimum_ms": 36.1734733581543
+      },
+      "forward_backward": {
+        "maximum_ms": 66.9536018371582,
+        "mean_ms": 65.93767127990722,
+        "median_ms": 66.89193725585938,
+        "minimum_ms": 64.45305633544922
+      },
+      "median_interactions_per_second": 1128648310.950014,
+      "peak_allocated_bytes": 10715136,
+      "shape": {
+        "K": 1152,
+        "M": 256,
+        "N": 256
+      },
+      "vgg8_batch": 1
+    },
+    "fc1_b1": {
+      "backward": {
+        "maximum_ms": 134.6378936767578,
+        "mean_ms": 133.81744995117188,
+        "median_ms": 134.58802795410156,
+        "minimum_ms": 130.70700073242188
+      },
+      "device_interactions": 8388608,
+      "finite_output_and_gradients": true,
+      "forward": {
+        "maximum_ms": 250.82627868652344,
+        "mean_ms": 248.8685272216797,
+        "median_ms": 248.38546752929688,
+        "minimum_ms": 248.35693359375
+      },
+      "forward_backward": {
+        "maximum_ms": 385.46417236328125,
+        "mean_ms": 382.68597717285155,
+        "median_ms": 382.9565124511719,
+        "minimum_ms": 379.0639343261719
+      },
+      "median_interactions_per_second": 21904857.933626533,
+      "peak_allocated_bytes": 193028096,
+      "shape": {
+        "K": 8192,
+        "M": 1,
+        "N": 1024
+      },
+      "vgg8_batch": 1
+    },
+    "micro": {
+      "backward": {
+        "maximum_ms": 8.276000022888184,
+        "mean_ms": 8.270707321166991,
+        "median_ms": 8.269408226013184,
+        "minimum_ms": 8.268256187438965
+      },
+      "device_interactions": 262144,
+      "finite_output_and_gradients": true,
+      "forward": {
+        "maximum_ms": 0.8308159708976746,
+        "mean_ms": 0.8305663824081421,
+        "median_ms": 0.8304640054702759,
+        "minimum_ms": 0.8303679823875427
+      },
+      "forward_backward": {
+        "maximum_ms": 9.10646402835846,
+        "mean_ms": 9.101273703575135,
+        "median_ms": 9.100224196910858,
+        "minimum_ms": 9.098624169826508
+      },
+      "median_interactions_per_second": 28806323.26497921,
+      "peak_allocated_bytes": 225280,
+      "shape": {
+        "K": 64,
+        "M": 64,
+        "N": 64
+      },
+      "vgg8_batch": 1
+    }
+  },
+  "config_sha256": "a7f0cacb85af5fd47fce0f25dd867608f74f4cf6ca234554aa13c884c86b60ca",
+  "config_source": "/root/dhz/yuhuihe/computing primitives/configs/device_params.yaml",
+  "configured_backends_before_override": {
+    "conv_backend": "lowrank_planar",
+    "direct_conv_enabled": false,
+    "linear_backend": "lowrank_planar",
+    "lut_enabled": true,
+    "planar_enabled": false,
+    "surrogate_backward_enabled": false,
+    "weight_quant_enabled": null
+  },
+  "dispatch": "FeFETFunction.apply imported directly from fefet_triton.py",
+  "elapsed_seconds": 13.778900861740112,
+  "enforced_raw_backend": {
+    "conv_backend": "reference",
+    "direct_conv_enabled": false,
+    "linear_backend": "reference",
+    "lut_enabled": false,
+    "planar_enabled": false,
+    "surrogate_backward_enabled": false,
+    "weight_quant_enabled": false
+  },
+  "environment": {
+    "cuda": "12.4",
+    "device_capability": [
+      9,
+      0
+    ],
+    "gpu": "NVIDIA H100 80GB HBM3 MIG 3g.40gb",
+    "python": "3.10.12",
+    "torch": "2.3.0a0+6ddf5cf85e.nv24.04"
+  },
+  "expected_trace_kernels": [
+    "_fefet_fwd_kernel",
+    "_fefet_grad_v_kernel",
+    "_fefet_grad_w_kernel"
+  ],
+  "formula_validation": {
+    "forward_max_abs": 0.000392913818359375,
+    "forward_max_rel": 0.0011122726136818528,
+    "forward_mean_abs": 0.0001093814498744905,
+    "grad_neg_max_abs": 0.00028228759765625,
+    "grad_neg_max_rel": 3.205204484402202e-05,
+    "grad_neg_mean_abs": 6.99944284860976e-05,
+    "grad_pos_max_abs": 0.000278472900390625,
+    "grad_pos_max_rel": 0.0041353218257427216,
+    "grad_pos_mean_abs": 8.202977915061638e-05,
+    "grad_v_max_abs": 0.0010581016540527344,
+    "grad_v_max_rel": 0.0016372610116377473,
+    "grad_v_mean_abs": 7.558528159279376e-05
+  },
+  "iterations": 5,
+  "kernel_sha256": "9f01869f9afde1e80fc13d162826e068cf44c41bb5e560e78355a34e45d06102",
+  "kernel_source": "/root/dhz/yuhuihe/computing primitives/devices/fefet_triton.py",
+  "method": "exact FeFET L-K solve plus EKV current with analytical backward",
+  "seed": 20260805,
+  "status": "completed",
+  "warmup": 2
+}

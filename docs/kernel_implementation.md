@@ -18,11 +18,13 @@ The optimized path consists of:
 Vision defaults to an 8192-entry LUT. Language defaults to 4096 entries. Both
 use a Triton reduction block size of eight along the input dimension.
 
-## Multi-device approximation
+## Multi-device physical operators
 
-The MLP/VGG8 study includes five device equations. PCM, FeFET, and Flash use a
-low-rank approximation of the state/voltage response surface. ReRAM and STT use
-factorized kernels and do not use the low-rank backend.
+The MLP/VGG8 study includes five device equations and selects a device-specific
+physical-response operator for ReRAM, PCM, STT, FeFET, and Flash transistor.
+The FeFET operator retains the original L-K mapping and EKV channel response,
+with analytical gradients through the implicit L-K solve.
 
-The low-rank device-study backend and the Transformer FFN LUT kernel are
-separate implementations with separate configuration.
+These device-study operators and the Transformer FFN LUT kernel are independent
+implementation layers with separate physical parameters, configurations, and
+optimization paths.

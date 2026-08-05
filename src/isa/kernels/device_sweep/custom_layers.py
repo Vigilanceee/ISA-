@@ -10,19 +10,15 @@ Conv2d 通过 F.unfold (im2col) 将卷积转化为矩阵乘法,
 """
 
 import math
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from isa.device_sweeps.models.quantization import quantize_uniform_states
-
-from .reram_triton import ReRAMFunction
-from .pcm_triton import PCMFunction
-from .stt_triton import STTFunction
-from .fefet_triton import FeFETFunction
-from .flash_triton import FlashFunction
-from .lut_triton import FeFETLUTFunction, FlashLUTFunction, PCMLUTFunction, PCMPlanarFunction
-from .direct_conv_triton import DirectTransistorConv2d
+from isa.approximations.lowrank_planar import (
+    lowrank_planar_conv2d,
+    lowrank_planar_linear,
+)
 from isa.approximations.node_planar import (
     factorized_conv2d,
     factorized_linear,
@@ -30,10 +26,16 @@ from isa.approximations.node_planar import (
     node_planar_linear,
     state_nodes,
 )
-from isa.approximations.lowrank_planar import (
-    lowrank_planar_conv2d,
-    lowrank_planar_linear,
-)
+from isa.device_sweeps.backend import select_primitive_backend
+from isa.device_sweeps.models.quantization import quantize_uniform_states
+
+from .direct_conv_triton import DirectTransistorConv2d
+from .fefet_triton import FeFETFunction
+from .flash_triton import FlashFunction
+from .lut_triton import FeFETLUTFunction, FlashLUTFunction, PCMLUTFunction, PCMPlanarFunction
+from .pcm_triton import PCMFunction
+from .reram_triton import ReRAMFunction
+from .stt_triton import STTFunction
 
 _FUNC_MAP = {
     'reram': ReRAMFunction,
@@ -64,12 +66,19 @@ def _maybe_quantize_weight(theta: torch.Tensor, device_params: dict):
     return quantize_uniform_states(theta, lo, hi, states)
 
 
-def _select_nvm_func(device_type: str, device_params: dict):
-    if bool((device_params or {}).get("planar_enabled", False)):
-        return _PLANAR_FUNC_MAP.get(device_type, _FUNC_MAP[device_type])
-    if bool((device_params or {}).get("lut_enabled", False)):
+def _select_nvm_func(
+    device_type: str,
+    device_params: dict,
+    backend: str | None = None,
+):
+    primitive_backend = select_primitive_backend(device_params, backend)
+    if primitive_backend == "reference":
+        return _FUNC_MAP[device_type]
+    if primitive_backend == "lut":
         return _LUT_FUNC_MAP.get(device_type, _FUNC_MAP[device_type])
-    return _FUNC_MAP[device_type]
+    if primitive_backend == "planar":
+        return _PLANAR_FUNC_MAP.get(device_type, _FUNC_MAP[device_type])
+    raise AssertionError(f"Unhandled primitive backend: {primitive_backend}")
 
 def _default_init_center(device_type: str, device_params: dict,
                          w_min: float, w_max: float) -> float:
@@ -123,9 +132,11 @@ class NVM_Linear(nn.Module):
         self.out_features = out_features
         self.device_params = device_params or {}
         self.device_type = device_type
-        self.nvm_func = _select_nvm_func(device_type, self.device_params)
         self.backend = str(
             self.device_params.get("linear_backend", self.device_params.get("conv_backend", "reference"))
+        )
+        self.nvm_func = _select_nvm_func(
+            device_type, self.device_params, self.backend
         )
         self.w_min = float(self.device_params.get('w_min', 1e-6))
         self.w_max = float(self.device_params.get('w_max', 5.0))
@@ -180,8 +191,10 @@ class NVM_Conv2d(nn.Module):
         self.padding = (padding, padding) if isinstance(padding, int) else padding
         self.device_params = device_params or {}
         self.device_type = device_type
-        self.nvm_func = _select_nvm_func(device_type, self.device_params)
         self.backend = str(self.device_params.get("conv_backend", "reference"))
+        self.nvm_func = _select_nvm_func(
+            device_type, self.device_params, self.backend
+        )
         self.w_min = float(self.device_params.get('w_min', 1e-6))
         self.w_max = float(self.device_params.get('w_max', 5.0))
 
@@ -235,6 +248,7 @@ class NVM_Conv2d(nn.Module):
         if (
             bool((self.device_params or {}).get("direct_conv_enabled", False))
             and self.device_type in {"flash", "fefet"}
+            and self.backend != "reference"
         ):
             return DirectTransistorConv2d.apply(
                 v_in, theta_pos, theta_neg, self.device_params,

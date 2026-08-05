@@ -1,0 +1,92 @@
+{
+  "benchmarks": {
+    "micro": {
+      "backward": {
+        "maximum_ms": 8.271519660949707,
+        "mean_ms": 8.271519660949707,
+        "median_ms": 8.271519660949707,
+        "minimum_ms": 8.271519660949707
+      },
+      "device_interactions": 262144,
+      "finite_output_and_gradients": true,
+      "forward": {
+        "maximum_ms": 0.8297920227050781,
+        "mean_ms": 0.8297920227050781,
+        "median_ms": 0.8297920227050781,
+        "minimum_ms": 0.8297920227050781
+      },
+      "forward_backward": {
+        "maximum_ms": 9.101311683654785,
+        "mean_ms": 9.101311683654785,
+        "median_ms": 9.101311683654785,
+        "minimum_ms": 9.101311683654785
+      },
+      "median_interactions_per_second": 28802881.289165087,
+      "peak_allocated_bytes": 159744,
+      "shape": {
+        "K": 64,
+        "M": 64,
+        "N": 64
+      },
+      "vgg8_batch": 1
+    }
+  },
+  "config_sha256": "a7f0cacb85af5fd47fce0f25dd867608f74f4cf6ca234554aa13c884c86b60ca",
+  "config_source": "/root/dhz/yuhuihe/computing primitives/configs/device_params.yaml",
+  "configured_backends_before_override": {
+    "conv_backend": "lowrank_planar",
+    "direct_conv_enabled": false,
+    "linear_backend": "lowrank_planar",
+    "lut_enabled": true,
+    "planar_enabled": false,
+    "surrogate_backward_enabled": false,
+    "weight_quant_enabled": null
+  },
+  "dispatch": "FeFETFunction.apply imported directly from fefet_triton.py",
+  "elapsed_seconds": 10.495289087295532,
+  "enforced_raw_backend": {
+    "conv_backend": "reference",
+    "direct_conv_enabled": false,
+    "linear_backend": "reference",
+    "lut_enabled": false,
+    "planar_enabled": false,
+    "surrogate_backward_enabled": false,
+    "weight_quant_enabled": false
+  },
+  "environment": {
+    "cuda": "12.4",
+    "device_capability": [
+      9,
+      0
+    ],
+    "gpu": "NVIDIA H100 80GB HBM3 MIG 3g.40gb",
+    "python": "3.10.12",
+    "torch": "2.3.0a0+6ddf5cf85e.nv24.04"
+  },
+  "expected_trace_kernels": [
+    "_fefet_fwd_kernel",
+    "_fefet_grad_v_kernel",
+    "_fefet_grad_w_kernel"
+  ],
+  "formula_validation": {
+    "forward_max_abs": 0.000392913818359375,
+    "forward_max_rel": 0.0011122726136818528,
+    "forward_mean_abs": 0.0001093814498744905,
+    "grad_neg_max_abs": 0.00028228759765625,
+    "grad_neg_max_rel": 3.205204484402202e-05,
+    "grad_neg_mean_abs": 6.99944284860976e-05,
+    "grad_pos_max_abs": 0.000278472900390625,
+    "grad_pos_max_rel": 0.0041353218257427216,
+    "grad_pos_mean_abs": 8.202977915061638e-05,
+    "grad_v_max_abs": 0.0010581016540527344,
+    "grad_v_max_rel": 0.0016372610116377473,
+    "grad_v_mean_abs": 7.558528159279376e-05
+  },
+  "iterations": 1,
+  "kernel_sha256": "9f01869f9afde1e80fc13d162826e068cf44c41bb5e560e78355a34e45d06102",
+  "kernel_source": "/root/dhz/yuhuihe/computing primitives/devices/fefet_triton.py",
+  "method": "exact FeFET L-K solve plus EKV current with analytical backward",
+  "seed": 20260805,
+  "status": "completed",
+  "warmup": 1
+}

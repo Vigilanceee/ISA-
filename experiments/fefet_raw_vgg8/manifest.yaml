@@ -1,0 +1,30 @@
+version: 1
+device: fefet
+model: vgg8
+dataset: cifar10
+device_config: configs/device_sweeps/device_params_fefet_latest_fit.yaml
+search_config: configs/device_sweeps/search_matrix.yaml
+data_dir: data
+output_root: runs/fefet_raw_vgg8_5seed
+epochs: 200
+
+seeds: [20260805, 20260806, 20260807, 20260808, 20260809]
+
+fixed_hyperparameters:
+  provenance: 20260729 FeFET clean-fit T1; backend-only reference/raw split
+  lr: 0.014701762450
+  init_center: 2.214381698
+  init_half_width: 1.020930704
+  tia_r: 133.2815
+
+health:
+  non_finite: immediate
+  epoch8_min_best: 0.15
+  epoch20_min_best: 0.35
+  plateau_window: 5
+  plateau_min_gain: 0.02
+
+execution:
+  batch_size: 128
+  workers: 4
+  checkpoint_interval: 5

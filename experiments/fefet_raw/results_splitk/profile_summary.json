@@ -1,0 +1,39 @@
+{
+  "all_cuda_kernel_time_ns": 13256154.0,
+  "matching_rows": [
+    {
+      "category": "grad_weights",
+      "kernel": "_fefet_grad_w_split_kernel_0d1d2d3d4d5d6de7de8de9de10c11de12c13de14c15de16c171819202122",
+      "total_time_ns": 4677852.0
+    },
+    {
+      "category": "grad_voltage",
+      "kernel": "_fefet_grad_v_split_kernel_0d1d2d3d4d5de6de7de8de9c10de11c12de13c14de15c161718192021",
+      "total_time_ns": 4621597.0
+    },
+    {
+      "category": "forward",
+      "kernel": "_fefet_fwd_split_k_kernel_0d1d2d3d4de5de6de7de8de9c10de11c12de13de14c151617181920",
+      "total_time_ns": 3872606.0
+    },
+    {
+      "category": "forward",
+      "kernel": "_fefet_fwd_split_k_reduce_kernel_0d1d2de3de4de5de6de7c8de9c",
+      "total_time_ns": 5152.0
+    }
+  ],
+  "raw_fefet_kernel_time_ns": 13177207.0,
+  "raw_fefet_share_of_all_cuda_kernel_time": 0.9940445018970058,
+  "raw_kernel_category_share": {
+    "forward": 0.2942776872215789,
+    "grad_voltage": 0.3507265993468874,
+    "grad_weights": 0.3549957134315337
+  },
+  "raw_kernel_category_time_ns": {
+    "forward": 3877758.0,
+    "grad_voltage": 4621597.0,
+    "grad_weights": 4677852.0
+  },
+  "status": "PASS",
+  "trace_contains_all_raw_kernels": true
+}

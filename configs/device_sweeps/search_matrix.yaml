@@ -27,6 +27,10 @@ training:
     trials: 20
     prune_start_epoch: 8
     prune_acc_threshold: 0.15
+    health_epoch8_min_best: 0.15
+    health_epoch20_min_best: 0.35
+    health_plateau_window: 5
+    health_plateau_min_gain: 0.02
     bf16: true
     channels_last: true
 

@@ -1,0 +1,34 @@
+{
+  "all_cuda_kernel_time_ns": 126445958.0,
+  "matching_rows": [
+    {
+      "category": "forward",
+      "kernel": "_fefet_fwd_kernel_0d1d2d3d4de5de6de7de8c9de10c11de12c131415161718",
+      "total_time_ns": 72376309.0
+    },
+    {
+      "category": "grad_voltage",
+      "kernel": "_fefet_grad_v_kernel_0d1d2d3d4d5de6de7de8de9c10de11c12de13c14de15c161718192021",
+      "total_time_ns": 29971945.0
+    },
+    {
+      "category": "grad_weights",
+      "kernel": "_fefet_grad_w_kernel_0d1d2d3d4d5d6de7de8de9de10c11de12c13de14c15de16c171819202122",
+      "total_time_ns": 24011367.0
+    }
+  ],
+  "raw_fefet_kernel_time_ns": 126359621.0,
+  "raw_fefet_share_of_all_cuda_kernel_time": 0.9993172023735231,
+  "raw_kernel_category_share": {
+    "forward": 0.5727803583709704,
+    "grad_voltage": 0.23719559114537073,
+    "grad_weights": 0.19002405048365886
+  },
+  "raw_kernel_category_time_ns": {
+    "forward": 72376309.0,
+    "grad_voltage": 29971945.0,
+    "grad_weights": 24011367.0
+  },
+  "status": "PASS",
+  "trace_contains_all_raw_kernels": true
+}
