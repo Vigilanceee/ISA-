@@ -154,9 +154,11 @@ class TritonEKVMatmulFn(torch.autograd.Function):
     def forward(ctx, x: torch.Tensor, wpos: torch.Tensor, wneg: torch.Tensor, cfg: Dict[str, Any]):
         m, k = x.shape
         o = wpos.shape[0]
-        out = torch.empty((m, o), device=x.device, dtype=torch.float32)
+        out = torch.empty((m, o), device=x.device, dtype=x.dtype)
         inv_2nut = 1.0 / (2.0 * float(cfg['n']) * float(cfg['U_T']))
-        nvd = float(cfg['n']) * float(cfg['V_D'])
+        # _ekv_current applies inv_2nut after subtracting this quantity, so it
+        # must receive the physical drain voltage itself (not n * V_D).
+        nvd = float(cfg['V_D'])
         i_s = float(cfg['I_S'])
         v_sat = float(cfg['V_sat'])
         bm = int(cfg.get('TRITON_BLOCK_M', 16))
@@ -182,7 +184,7 @@ class TritonEKVMatmulFn(torch.autograd.Function):
         o = wpos.shape[0]
         grad_out = grad_out.contiguous()
         inv_2nut = 1.0 / (2.0 * float(cfg['n']) * float(cfg['U_T']))
-        nvd = float(cfg['n']) * float(cfg['V_D'])
+        nvd = float(cfg['V_D'])
         i_s = float(cfg['I_S'])
         v_sat = float(cfg['V_sat'])
 

@@ -14,6 +14,7 @@ defaults:
     data-dir: "{data}"
     workers: 4
     seed: 20260728
+    trials: 5
 order:
   - mlp_reram
   - mlp_pcm

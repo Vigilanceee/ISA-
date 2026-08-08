@@ -36,3 +36,10 @@ def test_every_main_matrix_has_all_variants_and_sizes():
 def test_device_matrix_has_ten_experiments():
     matrix = load("configs/device_sweeps/all_devices.yaml")
     assert len(matrix["experiments"]) == 10
+    assert matrix["defaults"]["args"]["trials"] == 5
+
+
+def test_each_device_search_uses_five_trials():
+    matrix = load("configs/device_sweeps/search_matrix.yaml")
+    assert matrix["training"]["mlp"]["trials"] == 5
+    assert matrix["training"]["vgg8"]["trials"] == 5

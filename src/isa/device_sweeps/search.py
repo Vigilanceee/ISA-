@@ -337,7 +337,7 @@ def parse_args() -> argparse.Namespace:
         "--health-pruning",
         action=argparse.BooleanOptionalAction,
         default=None,
-        help="Enable VGG8 early-health thresholds; defaults on for FeFET VGG8.",
+        help="Enable VGG8 early-health thresholds; defaults on for every VGG8 device.",
     )
     parser.add_argument("--health-epoch8-min-best", type=float)
     parser.add_argument("--health-epoch20-min-best", type=float)
@@ -569,15 +569,28 @@ def main() -> None:
                 "device_params": params,
                 "world_size": world_size(),
             }
-            if args.device == "fefet":
-                kernel_path = (
-                    Path(__file__).resolve().parents[1]
-                    / "kernels/device_sweep/fefet_triton.py"
+            source_root = Path(__file__).resolve().parents[1]
+            matrix_kernel = source_root / "kernels/device_sweep" / f"{args.device}_triton.py"
+            kernel_paths = [matrix_kernel]
+            if params.get("direct_conv_enabled", False):
+                kernel_paths.append(
+                    source_root / "kernels/device_sweep/direct_conv_triton.py"
                 )
-                metadata["device_kernel"] = {
-                    "path": str(kernel_path),
-                    "sha256": sha256_file(kernel_path),
-                }
+            if params.get("conv_backend") == "factorized":
+                kernel_paths.append(source_root / "approximations/node_planar.py")
+            if (
+                args.device == "flash"
+                and params.get("exact_matrix_backend", "split")
+                in {"auto", "ffn_tiled"}
+            ):
+                kernel_paths.append(
+                    source_root / "kernels/transformer_ffn/ekv_triton.py"
+                )
+            metadata["device_kernels"] = [
+                {"path": str(path), "sha256": sha256_file(path)}
+                for path in kernel_paths
+                if path.is_file()
+            ]
             with (run_directory / f"trial_{trial_number}_config.json").open(
                 "w", encoding="utf-8"
             ) as handle:
@@ -593,7 +606,7 @@ def main() -> None:
         threshold_pruning = (
             args.health_pruning
             if args.health_pruning is not None
-            else args.model == "vgg8" and args.device == "fefet"
+            else args.model == "vgg8"
         )
         trial_start = time.perf_counter()
         for epoch in range(start_epoch, epochs + 1):

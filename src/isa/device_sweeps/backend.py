@@ -2,7 +2,14 @@
 
 from __future__ import annotations
 
-BACKENDS = ("reference", "lut", "factorized", "node_planar", "lowrank_planar")
+BACKENDS = (
+    "exact",
+    "reference",
+    "lut",
+    "factorized",
+    "node_planar",
+    "lowrank_planar",
+)
 
 
 def select_primitive_backend(
@@ -50,6 +57,4 @@ def normalize_backend_parameters(
 
     resolved["lut_enabled"] = "lut" in {conv, linear}
     resolved["planar_enabled"] = False
-    if conv == "reference":
-        resolved["direct_conv_enabled"] = False
     return resolved

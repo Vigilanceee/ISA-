@@ -214,13 +214,11 @@ generates source tables plus publication-ready Figure 3b/3c exports. See
 [`experiments/prediction_trajectory/README.md`](experiments/prediction_trajectory/README.md)
 for the complete protocol and interpretation boundary.
 
-The default FeFET entry intentionally uses the older, poorer measured-data fit
-selected for the device comparison (`A_lk=0.001369`, `B_lk=1.29224`,
-`I_S=11.0725`, `n=1.112106`).  The later clean fit is retained as
-[`configs/device_sweeps/device_params_fefet_latest_fit.yaml`](configs/device_sweeps/device_params_fefet_latest_fit.yaml).
-The selected historical results and the later controlled LR search are kept
-separately in [`results/device_sweep_selected.csv`](results/device_sweep_selected.csv)
-and [`results/device_sweep_latest_lr_search.csv`](results/device_sweep_latest_lr_search.csv).
+The default FeFET entry evaluates the fitted L-K/EKV equation directly with
+the clean mean coefficients and fitted threshold-state interval documented in
+[`docs/device_formula_provenance.md`](docs/device_formula_provenance.md).
+Historical result tables remain under `results/`; they are not used as the
+configuration source for a new device sweep.
 
 ### Measured 24-state deployment
 

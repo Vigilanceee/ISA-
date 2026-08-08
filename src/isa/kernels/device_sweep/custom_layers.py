@@ -28,10 +28,11 @@ from isa.approximations.node_planar import (
 )
 from isa.device_sweeps.backend import select_primitive_backend
 from isa.device_sweeps.models.quantization import quantize_uniform_states
+from isa.kernels.transformer_ffn.ekv_triton import TritonEKVMatmulFn
 
-from .direct_conv_triton import DirectTransistorConv2d
+from .direct_conv_triton import DirectFormulaConv2d
 from .fefet_triton import FeFETFunction
-from .flash_triton import FlashFunction
+from .flash_triton import FlashFunction, FlashSplitFunction
 from .lut_triton import FeFETLUTFunction, FlashLUTFunction, PCMLUTFunction, PCMPlanarFunction
 from .pcm_triton import PCMFunction
 from .reram_triton import ReRAMFunction
@@ -55,6 +56,32 @@ _PLANAR_FUNC_MAP = {
     'pcm': PCMPlanarFunction,
 }
 
+
+def _use_flash_ffn_exact_kernel(
+    device_type: str,
+    backend: str,
+    device_params: dict,
+    *,
+    is_convolution: bool,
+    fan_in: int,
+) -> bool:
+    """Select the profiled exact EKV tile for shapes where it is faster."""
+
+    if device_type != "flash" or backend not in {"exact", "reference"}:
+        return False
+    choice = str(device_params.get("exact_matrix_backend", "auto"))
+    if choice == "legacy":
+        return False
+    if choice == "split":
+        return False
+    if choice == "ffn_tiled":
+        return True
+    if choice != "auto":
+        raise ValueError(f"Unsupported Flash exact_matrix_backend: {choice}")
+    if not is_convolution:
+        return True
+    return fan_in <= int(device_params.get("exact_ffn_reuse_max_conv_fanin", 64))
+
 def _maybe_quantize_weight(theta: torch.Tensor, device_params: dict):
     if not bool((device_params or {}).get("weight_quant_enabled", False)):
         return theta
@@ -73,6 +100,11 @@ def _select_nvm_func(
 ):
     primitive_backend = select_primitive_backend(device_params, backend)
     if primitive_backend == "reference":
+        if (
+            device_type == "flash"
+            and str(device_params.get("exact_matrix_backend", "split")) == "split"
+        ):
+            return FlashSplitFunction
         return _FUNC_MAP[device_type]
     if primitive_backend == "lut":
         return _LUT_FUNC_MAP.get(device_type, _FUNC_MAP[device_type])
@@ -173,6 +205,16 @@ class NVM_Linear(nn.Module):
                 self.planar_state_nodes,
                 self.device_params, self.device_type,
             )
+        if _use_flash_ffn_exact_kernel(
+            self.device_type,
+            self.backend,
+            self.device_params,
+            is_convolution=False,
+            fan_in=self.in_features,
+        ):
+            return TritonEKVMatmulFn.apply(
+                v_in, theta_pos, theta_neg, self.device_params
+            )
         out = self.nvm_func.apply(v_in, theta_pos, theta_neg,
                                   self.device_params)
         return out
@@ -247,10 +289,10 @@ class NVM_Conv2d(nn.Module):
 
         if (
             bool((self.device_params or {}).get("direct_conv_enabled", False))
-            and self.device_type in {"flash", "fefet"}
-            and self.backend != "reference"
+            and self.device_type in {"pcm", "flash", "fefet"}
+            and self.backend in {"exact", "reference"}
         ):
-            return DirectTransistorConv2d.apply(
+            return DirectFormulaConv2d.apply(
                 v_in, theta_pos, theta_neg, self.device_params,
                 self.device_type, self.kernel_size, self.stride, self.padding,
                 self.nvm_func,
@@ -261,8 +303,20 @@ class NVM_Conv2d(nn.Module):
                          stride=self.stride, padding=self.padding)
         v_flat = v_col.permute(0, 2, 1).contiguous().view(B * L, -1)
 
-        out_flat = self.nvm_func.apply(v_flat, theta_pos, theta_neg,
-                                       self.device_params)
+        matrix_function = (
+            TritonEKVMatmulFn
+            if _use_flash_ffn_exact_kernel(
+                self.device_type,
+                self.backend,
+                self.device_params,
+                is_convolution=True,
+                fan_in=v_flat.shape[1],
+            )
+            else self.nvm_func
+        )
+        out_flat = matrix_function.apply(
+            v_flat, theta_pos, theta_neg, self.device_params
+        )
 
         return (out_flat.view(B, L, self.out_channels)
                         .permute(0, 2, 1)

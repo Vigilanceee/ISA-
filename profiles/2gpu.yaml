@@ -1,0 +1,4 @@
+gpus: 2
+environment:
+  TOKENIZERS_PARALLELISM: "false"
+  PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True

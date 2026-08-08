@@ -99,10 +99,10 @@ def validate_manifest(manifest: dict, repo_root: Path) -> None:
     config_path = repo_root / str(manifest["device_config"])
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     fefet = config["fefet"]
-    if fefet.get("conv_backend") != "reference":
-        raise ValueError("FeFET conv_backend must be reference")
-    if fefet.get("linear_backend") != "reference":
-        raise ValueError("FeFET linear_backend must be reference")
+    if fefet.get("conv_backend") not in {"exact", "reference"}:
+        raise ValueError("FeFET conv_backend must evaluate the exact formula")
+    if fefet.get("linear_backend") not in {"exact", "reference"}:
+        raise ValueError("FeFET linear_backend must evaluate the exact formula")
     if fefet.get("raw_kernel_backend") != "split":
         raise ValueError("FeFET raw_kernel_backend must be split")
     if fefet.get("raw_forward_backend") != "split_k":
@@ -162,9 +162,9 @@ def build_command(
         "--checkpoint-interval",
         str(execution.get("checkpoint_interval", 5)),
         "--conv-backend",
-        "reference",
+        "exact",
         "--linear-backend",
-        "reference",
+        "exact",
         "--fixed-lr",
         str(hp["lr"]),
         "--fixed-init-center",

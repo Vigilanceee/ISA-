@@ -22,11 +22,11 @@ ROOT = Path(__file__).resolve().parents[1]
         "configs/device_sweeps/device_params_fefet_latest_fit.yaml",
     ),
 )
-def test_fefet_configs_select_raw_reference_backend(relative):
+def test_fefet_configs_select_exact_formula_backend(relative):
     payload = yaml.safe_load((ROOT / relative).read_text(encoding="utf-8"))
     fefet = payload["fefet"]
-    assert fefet["conv_backend"] == "reference"
-    assert fefet["linear_backend"] == "reference"
+    assert fefet["conv_backend"] == "exact"
+    assert fefet["linear_backend"] == "exact"
     assert fefet["raw_kernel_backend"] == "split"
     assert fefet["raw_forward_backend"] == "split_k"
     assert fefet["lut_enabled"] is False
