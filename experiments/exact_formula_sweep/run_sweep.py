@@ -56,6 +56,14 @@ def arguments() -> argparse.Namespace:
     parser.add_argument("--seed", type=int, default=20260808)
     parser.add_argument("--max-train-steps", type=int, default=0)
     parser.add_argument("--max-val-steps", type=int, default=0)
+    parser.add_argument(
+        "--reuse-vgg8-fefet-root",
+        type=Path,
+        help=(
+            "Reuse a completed five-run exact-formula VGG8/FeFET study instead "
+            "of scheduling five redundant trials."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -144,6 +152,33 @@ def write_status(output_root: Path, payload: dict) -> None:
     temporary.replace(status)
 
 
+def reused_vgg8_fefet(path: Path, trials: int) -> dict:
+    if not path.is_dir():
+        raise FileNotFoundError(f"Reused VGG8/FeFET result directory not found: {path}")
+    terminal_files = sorted(path.glob("seed_*/terminal.json"))
+    if len(terminal_files) != trials:
+        raise ValueError(
+            f"Expected {trials} reused VGG8/FeFET terminal records, "
+            f"found {len(terminal_files)} under {path}"
+        )
+    records = []
+    for terminal_file in terminal_files:
+        record = json.loads(terminal_file.read_text(encoding="utf-8"))
+        if record.get("state") not in TERMINAL_STATES:
+            raise ValueError(f"Non-terminal reused result: {terminal_file}")
+        records.append(
+            {
+                "seed": record.get("seed"),
+                "state": record.get("state"),
+                "best_val_acc": record.get("best_val_acc"),
+                "last_epoch": record.get("last_epoch"),
+                "stop_reason": record.get("stop_reason"),
+                "terminal": str(terminal_file),
+            }
+        )
+    return {"task": "vgg8/fefet", "source_root": str(path), "records": records}
+
+
 def main() -> None:
     args = arguments()
     if args.trials != 5:
@@ -153,7 +188,14 @@ def main() -> None:
     args.output_root.mkdir(parents=True, exist_ok=True)
     pending = queue.Queue()
     skipped = []
-    for task in TASKS:
+    reused = None
+    tasks = TASKS
+    if args.reuse_vgg8_fefet_root is not None:
+        reused = reused_vgg8_fefet(args.reuse_vgg8_fefet_root, args.trials)
+        tasks = tuple(task for task in TASKS if task != ("vgg8", "fefet"))
+        reuse_manifest = args.output_root / "reused_vgg8_fefet.json"
+        reuse_manifest.write_text(json.dumps(reused, indent=2) + "\n", encoding="utf-8")
+    for task in tasks:
         if completed(args.output_root, *task, args.trials):
             skipped.append("/".join(task))
         else:
@@ -174,6 +216,7 @@ def main() -> None:
                 "skipped": skipped,
                 "failures": list(failures),
                 "remaining": pending.qsize(),
+                "reused": reused,
             },
         )
 

@@ -17,3 +17,17 @@ bash experiments/exact_formula_sweep/run_2gpu.sh \
 
 The launcher does not download datasets. VGG8 applies the configured health
 checks at epochs 8 and 20 so failed trials do not consume all 200 epochs.
+
+If a five-run exact VGG8/FeFET health study has already completed, reuse it
+instead of spending GPU time on identical trials:
+
+```bash
+bash experiments/exact_formula_sweep/run_2gpu.sh \
+  --data /path/to/existing/device_sweep_data \
+  --output-root /path/to/exact_formula_sweep_results \
+  --reuse-vgg8-fefet-root /path/to/completed_fefet_vgg8_5run_results
+```
+
+The scheduler validates all five terminal records, writes their provenance to
+`reused_vgg8_fefet.json`, and schedules only FeFET/MLP plus the remaining four
+devices for both networks.
