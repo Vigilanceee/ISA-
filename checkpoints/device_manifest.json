@@ -1,0 +1,44 @@
+{
+  "architecture": "VGG8",
+  "checkpoints": [
+    {
+      "best_epoch": 190,
+      "bytes": 103849872,
+      "device": "ReRAM",
+      "file": "cifar10-vgg8/reram/model.pth",
+      "sha256": "a72c4fdf3fa567fca7e9ab78dd3d306411427c69ed15b4bad0d9060b6ebfbb9e",
+      "trial": 2,
+      "validation_top1_accuracy": 0.875
+    },
+    {
+      "best_epoch": 177,
+      "bytes": 103849927,
+      "device": "PCM",
+      "file": "cifar10-vgg8/pcm/model.pth",
+      "sha256": "7186be82c649546cb14005a2ca28c9c2982c4a24f981c05563d379926c959909",
+      "trial": 12,
+      "validation_top1_accuracy": 0.9203
+    },
+    {
+      "best_epoch": 170,
+      "bytes": 103849927,
+      "device": "STT",
+      "file": "cifar10-vgg8/stt/model.pth",
+      "sha256": "bb28c72c7b6bc68858448e350ccb90e57eef5fc42609490ea03d9172e729a915",
+      "trial": 17,
+      "validation_top1_accuracy": 0.8922
+    },
+    {
+      "best_epoch": 182,
+      "bytes": 103849927,
+      "device": "Flash",
+      "file": "cifar10-vgg8/flash/model.pth",
+      "sha256": "e4dbdf39f42d2949c8a07cecdf2f4b390a879157f33e91771b649dd3b3d260fb",
+      "trial": 10,
+      "validation_top1_accuracy": 0.9014
+    }
+  ],
+  "dataset": "CIFAR-10",
+  "repository": "Viligance/ISA-Device-Checkpoints",
+  "revision": "48dd14d1bea40f40b90e9c3cfa3c51c307e30e7f"
+}

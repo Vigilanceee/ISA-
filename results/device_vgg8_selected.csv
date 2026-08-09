@@ -1,0 +1,5 @@
+architecture,dataset,device,trial,best_epoch,metric,split,value,checkpoint_repository,checkpoint_path,checkpoint_sha256
+VGG8,CIFAR-10,ReRAM,2,190,top1_accuracy,validation,0.8750,Viligance/ISA-Device-Checkpoints,cifar10-vgg8/reram/model.pth,a72c4fdf3fa567fca7e9ab78dd3d306411427c69ed15b4bad0d9060b6ebfbb9e
+VGG8,CIFAR-10,PCM,12,177,top1_accuracy,validation,0.9203,Viligance/ISA-Device-Checkpoints,cifar10-vgg8/pcm/model.pth,7186be82c649546cb14005a2ca28c9c2982c4a24f981c05563d379926c959909
+VGG8,CIFAR-10,STT,17,170,top1_accuracy,validation,0.8922,Viligance/ISA-Device-Checkpoints,cifar10-vgg8/stt/model.pth,bb28c72c7b6bc68858448e350ccb90e57eef5fc42609490ea03d9172e729a915
+VGG8,CIFAR-10,Flash,10,182,top1_accuracy,validation,0.9014,Viligance/ISA-Device-Checkpoints,cifar10-vgg8/flash/model.pth,e4dbdf39f42d2949c8a07cecdf2f4b390a879157f33e91771b649dd3b3d260fb

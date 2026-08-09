@@ -264,11 +264,16 @@ source repository:
 - [ISA Vision checkpoints](https://huggingface.co/Viligance/ISA-Vision):
   CIFAR-100 and ImageNet-200, three sizes and two variants;
 - [ISA Language checkpoints](https://huggingface.co/Viligance/ISA-Language):
-  OpenWebText models evaluated on OpenWebText, TinyStories, and BLiMP.
+  OpenWebText models evaluated on OpenWebText, TinyStories, and BLiMP;
+- [ISA Device checkpoints](https://huggingface.co/Viligance/ISA-Device-Checkpoints):
+  selected VGG8/CIFAR-10 checkpoints for ReRAM, PCM, STT, and Flash.
 
 Each model repository includes SHA256 checksums and release-validation
 metadata. Threshold offsets and TIA gains are embedded in the checkpoint, so
 no auxiliary mapping file is required for inference.
+
+The corresponding device-study metrics are available in
+[`results/device_vgg8_selected.csv`](results/device_vgg8_selected.csv).
 
 ## Current measurements
 
