@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "experiment": "CIFAR-100 Small Flash pre-TIA differential-current comparison",
+  "formula": "I_D(V_GS,V_TH)=I_S[softplus((V_GS-V_TH)/(2nU_T))^2-softplus((V_GS-V_TH-V_D)/(2nU_T))^2]/(1+V_GS/V_sat); I_diff=sum_k(I_D(V_GS,k,V_TH+,o,k)-I_D(V_GS,k,V_TH-,o,k))",
+  "deterministic_probe": {
+    "seed": 20260809,
+    "sample_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "labels": [
+      49,
+      33,
+      72,
+      51
+    ],
+    "batch_size": 4,
+    "near_zero_threshold_A": 1e-09,
+    "saturation_definition": "abs(I_diff) * R_TIA >= signed-output voltage limit"
+  },
+  "hybrid": {
+    "checkpoint": "cifar100/hybrid/small/model.pt",
+    "checkpoint_sha256": "d2e3c703c9a4c36b87848108271c7f42f3c6e5473cb22fc3a0f022938f670d3a",
+    "full_test_evaluation": {
+      "correct": 7098,
+      "cross_entropy": 1.271237459373474,
+      "examples": 10000,
+      "seconds": 55.295716285705566,
+      "top1_accuracy": 70.98
+    },
+    "all_cim_layers": {
+      "abs_max_A": 9.703724572318606e-06,
+      "abs_mean_A": 7.767191050334077e-07,
+      "count": 4792320,
+      "finite_ratio": 1,
+      "max_A": 9.216845683113206e-06,
+      "mean_A": -7.774277221983539e-09,
+      "near_zero_ratio": 0.0009294037008658051,
+      "p01_A": -2.990941311509232e-06,
+      "p50_A": -2.5952111570859415e-09,
+      "p99_A": 2.900552999562933e-06,
+      "std_A": 1.0637752438924508e-06,
+      "tia_saturation_ratio": 0
+    },
+    "shared_fc1_layers": {
+      "layers": 12,
+      "count": 4792320,
+      "finite_ratio": 1,
+      "mean_A": -7.774277004564864e-09,
+      "abs_mean_A": 7.767190529269404e-07,
+      "rms_std_A": 1.0638036715483437e-06,
+      "abs_max_A": 9.703724572318606e-06,
+      "near_zero_ratio": 0.0009294037275443164,
+      "tia_saturation_ratio": 0,
+      "mean_layer_p01_A": -2.349413970629636e-06,
+      "mean_layer_p50_A": -6.5954156950690885e-09,
+      "mean_layer_p99_A": 2.3296878168821422e-06
+    }
+  },
+  "physical": {
+    "checkpoint": "cifar100/physical/small/model.pt",
+    "checkpoint_sha256": "e42aed802c788592dad3dc8f51d0a04b51ab1816203a7424ec68986c5cedb61f",
+    "full_test_evaluation": {
+      "correct": 7197,
+      "cross_entropy": 1.2772061151504517,
+      "examples": 10000,
+      "seconds": 105.45464968681335,
+      "top1_accuracy": 71.97
+    },
+    "all_cim_layers": {
+      "abs_max_A": 4.634107244783081e-05,
+      "abs_mean_A": 4.168495252088178e-06,
+      "count": 5990400,
+      "finite_ratio": 1,
+      "max_A": 4.634107244783081e-05,
+      "mean_A": -1.233226498698059e-07,
+      "near_zero_ratio": 0.00016760149446781725,
+      "p01_A": -1.100147892429959e-05,
+      "p50_A": -1.0833095984708052e-06,
+      "p99_A": 2.206759927503299e-05,
+      "std_A": 5.935331500950269e-06,
+      "tia_saturation_ratio": 0.02744941972196102
+    },
+    "shared_fc1_layers": {
+      "layers": 12,
+      "count": 4792320,
+      "finite_ratio": 1,
+      "mean_A": -2.487844605510621e-07,
+      "abs_mean_A": 4.4175990675891326e-06,
+      "rms_std_A": 6.284559596074503e-06,
+      "abs_max_A": 4.047151014674455e-05,
+      "near_zero_ratio": 0.0001531617296374558,
+      "tia_saturation_ratio": 0.034215578343719244,
+      "mean_layer_p01_A": -1.0378685412130531e-05,
+      "mean_layer_p50_A": -1.521615892841055e-06,
+      "mean_layer_p99_A": 2.2046457615942927e-05
+    }
+  },
+  "ratios_physical_over_hybrid_shared_fc1": {
+    "abs_mean_current": 5.68751217179767,
+    "rms_current": 5.907631045235499,
+    "abs_max_current": 4.170719175418053
+  }
+}

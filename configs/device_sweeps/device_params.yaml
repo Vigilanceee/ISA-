@@ -1,0 +1,113 @@
+# ──────────────── NVM 器件物理参数 ────────────────
+#
+# 所有电流量纲: μA (微安)
+# 所有电压量纲: V  (伏特)
+# 所有电导量纲: μS (微西门子)
+# TIA 电阻量纲: Ω  (欧姆), 由 Optuna 搜索, 典型 10kΩ ~ 10MΩ
+#
+# 换算: V_out = I(μA) × 1e-6 × R_TIA(Ω)
+#
+# w_min / w_max: PGD 钳位边界
+# ──────────────────────────────────────────────────
+
+# ═══════════════ 量化全局开关 (MLP / VGG8 共用) ═══════════════
+quantization:
+  enabled: false
+  input_bits: 8
+  output_bits: 8
+
+# ═══════════════ 忆阻器类 (输入 [-0.5, 0.5]V) ═══════════════
+
+reram:
+  I0: 200.0      # μA — 电流预因子 (0.2 mA)
+  g0: 0.15       # nm — 间隙归一化常数
+  V0: 0.35       # V  — 电压归一化常数
+  g_min: 0.2     # nm — 最小间隙 (HRS)
+  g_max: 1.7     # nm — 最大间隙 (LRS)
+  w_min: 0.2
+  w_max: 1.7
+  init_center: 0.5
+  conv_backend: factorized
+  linear_backend: factorized
+
+pcm:
+  # I0(χ)=3.9766e-3 A * exp(-53.6321χ)
+  # 内部电流单位为 μA，因此 3.9766e-3 A = 3976.6 μA
+  I0_pcm: 3976.6      # μA — I0(χ) 前因子
+  I0_pcm_decay: 53.6321
+  V_T_pcm: 0.02585  # V  — 300 K thermal voltage kBT/q
+  # Measured state interval visible in Fig. S7-S8 of the supplied SI.
+  w_min: 0.15
+  w_max: 0.31
+  init_center: 0.23
+  conv_backend: exact
+  linear_backend: exact
+  raw_kernel_backend: split
+  raw_forward_backend: split_k
+  # Nsight/timing on H100 MIG: unfold + fused exact matrix kernel is faster
+  # than the strided direct-convolution candidate for training.
+  direct_conv_enabled: false
+  lut_enabled: false
+  planar_enabled: false
+
+stt:
+  I0_stt: 331.0  # μA/V (= μS) — 零偏压本征电导 G0
+  alpha: 0.79    # V⁻² — 非线性偏置系数
+  TMR: 1.2       # 无量纲 — 隧道磁阻比 TMR(0)=120%
+  w_min: 0.0
+  w_max: 3.1415926
+  init_center: 1.5707963
+  conv_backend: factorized
+  linear_backend: factorized
+
+# ═══════════════ 晶体管类 (输入 [0, 4]V) ═══════════════
+#
+# I(V,Vth) = I_S * [softplus²((V-Vth)/(2nU_T))
+#                  - softplus²((V-Vth-V_D)/(2nU_T))]
+#
+# 差分对阈值 (直接可训练):
+#   Vth_pos = theta_pos
+#   Vth_neg = theta_neg
+# 其中 theta_pos / theta_neg 为独立可训练参数
+# FeFET Vth 使用提供的逐态拟合区间；速度饱和项为 1 + V / V_sat
+
+fefet:
+  # Mean coefficients from fitting_text_for_paper.md (2026-06-05).
+  I_S: 6.3026     # μA = 6.3026e-6 A
+  n: 1.0280       # subthreshold factor
+  U_T: 0.026      # V  — thermal voltage (300K)
+  V_D: 0.1        # V  — drain voltage
+  A_lk: 0.8214    # exact L-K cubic coupling
+  B_lk: 1.3171    # exact L-K linear coupling
+  V_sat: 5.0      # V  — velocity saturation denominator 1 + V / V_sat
+  fitted_vth_states: [1.8711, 2.1054, 2.3445, 2.5970, 2.8471, 3.1103, 3.3727, 3.7399]
+  w_min: 1.8711
+  w_max: 3.7399
+  init_center: 2.8055
+  conv_backend: exact
+  linear_backend: exact
+  raw_kernel_backend: split
+  raw_forward_backend: split_k
+  lut_enabled: false
+  planar_enabled: false
+  direct_conv_enabled: false
+  surrogate_backward_enabled: false
+
+flash:
+  I_S: 0.75875    # μA — 电流缩放因子 (7.5875e-7 A)
+  n: 4.1360        # 亚阈值摆幅因子 (全局拟合)
+  U_T: 0.026       # V  — 热电压 (300K)
+  V_D: 0.1        # V  — 漏极电压
+  V_sat: 8.2624    # V  — 速度饱和特征电压
+  w_min: 0.0       # V  — Vth 下限 (直接可训练阈值)
+  w_max: 5.0       # V  — Vth 上限
+  init_center: 2.5   # V  — 初始化中心 (Vth 中值)
+  conv_backend: exact
+  linear_backend: exact
+  direct_conv_enabled: false
+  # Exact EKV with the profiled split-K/split-reduction parallel skeleton.
+  exact_matrix_backend: split
+  raw_kernel_backend: split
+  raw_forward_backend: split_k
+  lut_enabled: false
+  planar_enabled: false

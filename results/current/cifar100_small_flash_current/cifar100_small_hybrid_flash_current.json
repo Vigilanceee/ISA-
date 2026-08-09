@@ -1,0 +1,388 @@
+{
+  "backend": "exact fused EKV Triton",
+  "checkpoint": "cifar100/hybrid/small/model.pt",
+  "checkpoint_best_accuracy": 70.98,
+  "checkpoint_epoch": 265,
+  "checkpoint_sha256": "d2e3c703c9a4c36b87848108271c7f42f3c6e5473cb22fc3a0f022938f670d3a",
+  "current_probe": {
+    "batch_size": 4,
+    "labels": [
+      49,
+      33,
+      72,
+      51
+    ],
+    "layers": [
+      {
+        "abs_max_A": 9.703724572318606e-06,
+        "abs_mean_A": 1.4084060921959463e-06,
+        "count": 399360,
+        "current_shape": [
+          260,
+          1536
+        ],
+        "finite_ratio": 1.0,
+        "input_shape": [
+          4,
+          65,
+          384
+        ],
+        "layer": "blocks.0.mlp.fc1",
+        "max_A": 9.216845683113206e-06,
+        "mean_A": -5.984183815144206e-08,
+        "model_type": "hybrid",
+        "near_zero_ratio": 0.000503305287566036,
+        "p01_A": -4.315676051191986e-06,
+        "p50_A": -5.601767227858545e-08,
+        "p99_A": 4.184918452665443e-06,
+        "r_tia_ohm": 119669.671875,
+        "saturation_current_A": 3.3425344427936326e-05,
+        "std_A": 1.7853452618510346e-06,
+        "tia_saturation_ratio": 0.0
+      },
+      {
+        "abs_max_A": 9.5219174909289e-06,
+        "abs_mean_A": 1.5257410268532112e-06,
+        "count": 399360,
+        "current_shape": [
+          260,
+          1536
+        ],
+        "finite_ratio": 1.0,
+        "input_shape": [
+          4,
+          65,
+          384
+        ],
+        "layer": "blocks.1.mlp.fc1",
+        "max_A": 8.947989044827409e-06,
+        "mean_A": -4.043710077894502e-08,
+        "model_type": "hybrid",
+        "near_zero_ratio": 0.00042568109347485006,
+        "p01_A": -4.628079750546021e-06,
+        "p50_A": -3.2720812725983706e-08,
+        "p99_A": 4.462628567125648e-06,
+        "r_tia_ohm": 119620.484375,
+        "saturation_current_A": 3.3439088805729476e-05,
+        "std_A": 1.925448032125132e-06,
+        "tia_saturation_ratio": 0.0
+      },
+      {
+        "abs_max_A": 5.815424628963228e-06,
+        "abs_mean_A": 8.741011470192461e-07,
+        "count": 399360,
+        "current_shape": [
+          260,
+          1536
+        ],
+        "finite_ratio": 1.0,
+        "input_shape": [
+          4,
+          65,
+          384
+        ],
+        "layer": "blocks.2.mlp.fc1",
+        "max_A": 5.815424628963228e-06,
+        "mean_A": -1.0341802081370588e-08,
+        "model_type": "hybrid",
+        "near_zero_ratio": 0.0006961137987673283,
+        "p01_A": -2.6448174139659386e-06,
+        "p50_A": -9.037911752329819e-09,
+        "p99_A": 2.6130539936275454e-06,
+        "r_tia_ohm": 148351.34375,
+        "saturation_current_A": 2.696301832453068e-05,
+        "std_A": 1.1063216334150638e-06,
+        "tia_saturation_ratio": 0.0
+      },
+      {
+        "abs_max_A": 4.6012155507924035e-06,
+        "abs_mean_A": 6.68486052290973e-07,
+        "count": 399360,
+        "current_shape": [
+          260,
+          1536
+        ],
+        "finite_ratio": 1.0,
+        "input_shape": [
+          4,
+          65,
+          384
+        ],
+        "layer": "blocks.3.mlp.fc1",
+        "max_A": 4.6012155507924035e-06,
+        "mean_A": -9.138760304061577e-10,
+        "model_type": "hybrid",
+        "near_zero_ratio": 0.000966546474955976,
+        "p01_A": -2.0349807527964003e-06,
+        "p50_A": 6.40741681934287e-10,
+        "p99_A": 2.042920186795527e-06,
+        "r_tia_ohm": 166047.921875,
+        "saturation_current_A": 2.4089431260760846e-05,
+        "std_A": 8.507137181368307e-07,
+        "tia_saturation_ratio": 0.0
+      },
+      {
+        "abs_max_A": 4.5033698370389175e-06,
+        "abs_mean_A": 6.20212119883945e-07,
+        "count": 399360,
+        "current_shape": [
+          260,
+          1536
+        ],
+        "finite_ratio": 1.0,
+        "input_shape": [
+          4,
+          65,
+          384
+        ],
+        "layer": "blocks.4.mlp.fc1",
+        "max_A": 4.196483132545836e-06,
+        "mean_A": -9.27660348537529e-09,
+        "model_type": "hybrid",
+        "near_zero_ratio": 0.0010141226230189204,
+        "p01_A": -1.9010675487152184e-06,
+        "p50_A": -7.922475120381023e-09,
+        "p99_A": 1.8806538264470873e-06,
+        "r_tia_ohm": 144448.3125,
+        "saturation_current_A": 2.769156614411816e-05,
+        "std_A": 7.877982284298923e-07,
+        "tia_saturation_ratio": 0.0
+      },
+      {
+        "abs_max_A": 4.898300176137127e-06,
+        "abs_mean_A": 6.550890816470201e-07,
+        "count": 399360,
+        "current_shape": [
+          260,
+          1536
+        ],
+        "finite_ratio": 1.0,
+        "input_shape": [
+          4,
+          65,
+          384
+        ],
+        "layer": "blocks.5.mlp.fc1",
+        "max_A": 4.898300176137127e-06,
+        "mean_A": -7.626312026332016e-09,
+        "model_type": "hybrid",
+        "near_zero_ratio": 0.0010216346709057689,
+        "p01_A": -1.981392188099562e-06,
+        "p50_A": -9.2543590568539e-09,
+        "p99_A": 1.982868070626864e-06,
+        "r_tia_ohm": 122311.21875,
+        "saturation_current_A": 3.2703459591681974e-05,
+        "std_A": 8.306645895572728e-07,
+        "tia_saturation_ratio": 0.0
+      },
+      {
+        "abs_max_A": 4.589864147419576e-06,
+        "abs_mean_A": 5.888949203836091e-07,
+        "count": 399360,
+        "current_shape": [
+          260,
+          1536
+        ],
+        "finite_ratio": 1.0,
+        "input_shape": [
+          4,
+          65,
+          384
+        ],
+        "layer": "blocks.6.mlp.fc1",
+        "max_A": 3.9552178350277245e-06,
+        "mean_A": -6.866069934829966e-10,
+        "model_type": "hybrid",
+        "near_zero_ratio": 0.0011293068528175354,
+        "p01_A": -1.7832192042988027e-06,
+        "p50_A": 1.3609224858157631e-10,
+        "p99_A": 1.7731680372889969e-06,
+        "r_tia_ohm": 123835.5546875,
+        "saturation_current_A": 3.2300901062655485e-05,
+        "std_A": 7.460557753802277e-07,
+        "tia_saturation_ratio": 0.0
+      },
+      {
+        "abs_max_A": 4.4225544115761295e-06,
+        "abs_mean_A": 6.212415541995142e-07,
+        "count": 399360,
+        "current_shape": [
+          260,
+          1536
+        ],
+        "finite_ratio": 1.0,
+        "input_shape": [
+          4,
+          65,
+          384
+        ],
+        "layer": "blocks.7.mlp.fc1",
+        "max_A": 4.4225544115761295e-06,
+        "mean_A": 3.46602302414567e-09,
+        "model_type": "hybrid",
+        "near_zero_ratio": 0.0010541867231950164,
+        "p01_A": -1.8660193745745346e-06,
+        "p50_A": 4.097943318015496e-09,
+        "p99_A": 1.8761755882223952e-06,
+        "r_tia_ohm": 116137.2734375,
+        "saturation_current_A": 3.444200024338117e-05,
+        "std_A": 7.864970257287496e-07,
+        "tia_saturation_ratio": 0.0
+      },
+      {
+        "abs_max_A": 3.970655143348267e-06,
+        "abs_mean_A": 5.805281944049057e-07,
+        "count": 399360,
+        "current_shape": [
+          260,
+          1536
+        ],
+        "finite_ratio": 1.0,
+        "input_shape": [
+          4,
+          65,
+          384
+        ],
+        "layer": "blocks.8.mlp.fc1",
+        "max_A": 3.61640354640258e-06,
+        "mean_A": 1.466069154965055e-09,
+        "model_type": "hybrid",
+        "near_zero_ratio": 0.0010917468462139368,
+        "p01_A": -1.7420105677956599e-06,
+        "p50_A": 2.24426877082351e-09,
+        "p99_A": 1.734534293973411e-06,
+        "r_tia_ohm": 132545.046875,
+        "saturation_current_A": 3.017841929447807e-05,
+        "std_A": 7.331060487558716e-07,
+        "tia_saturation_ratio": 0.0
+      },
+      {
+        "abs_max_A": 3.941007889807224e-06,
+        "abs_mean_A": 5.605801334240823e-07,
+        "count": 399360,
+        "current_shape": [
+          260,
+          1536
+        ],
+        "finite_ratio": 1.0,
+        "input_shape": [
+          4,
+          65,
+          384
+        ],
+        "layer": "blocks.9.mlp.fc1",
+        "max_A": 3.941007889807224e-06,
+        "mean_A": 2.0161934344287147e-09,
+        "model_type": "hybrid",
+        "near_zero_ratio": 0.0010842347983270884,
+        "p01_A": -1.681301341704966e-06,
+        "p50_A": 2.5651656354597208e-09,
+        "p99_A": 1.6959652384684887e-06,
+        "r_tia_ohm": 167691.640625,
+        "saturation_current_A": 2.3853305895819756e-05,
+        "std_A": 7.097522711774218e-07,
+        "tia_saturation_ratio": 0.0
+      },
+      {
+        "abs_max_A": 3.821302470896626e-06,
+        "abs_mean_A": 5.316863394000393e-07,
+        "count": 399360,
+        "current_shape": [
+          260,
+          1536
+        ],
+        "finite_ratio": 1.0,
+        "input_shape": [
+          4,
+          65,
+          384
+        ],
+        "layer": "blocks.10.mlp.fc1",
+        "max_A": 3.821302470896626e-06,
+        "mean_A": 2.720820457824402e-09,
+        "model_type": "hybrid",
+        "near_zero_ratio": 0.0012044270988553762,
+        "p01_A": -1.5962269799274509e-06,
+        "p50_A": 1.468603016974157e-09,
+        "p99_A": 1.6171538845810574e-06,
+        "r_tia_ohm": 207038.484375,
+        "saturation_current_A": 1.932007960778427e-05,
+        "std_A": 6.738143838447286e-07,
+        "tia_saturation_ratio": 0.0
+      },
+      {
+        "abs_max_A": 4.710879693448078e-06,
+        "abs_mean_A": 6.856619734207925e-07,
+        "count": 399360,
+        "current_shape": [
+          260,
+          1536
+        ],
+        "finite_ratio": 1.0,
+        "input_shape": [
+          4,
+          65,
+          384
+        ],
+        "layer": "blocks.11.mlp.fc1",
+        "max_A": 4.370169335743412e-06,
+        "mean_A": 2.6163709421211934e-08,
+        "model_type": "hybrid",
+        "near_zero_ratio": 0.000961538462433964,
+        "p01_A": -2.018176473939093e-06,
+        "p50_A": 2.4655427921516093e-08,
+        "p99_A": 2.0922136627632426e-06,
+        "r_tia_ohm": 205140.1875,
+        "saturation_current_A": 1.9498860992315315e-05,
+        "std_A": 8.662943287163216e-07,
+        "tia_saturation_ratio": 0.0
+      }
+    ],
+    "logit_shape": [
+      4,
+      100
+    ],
+    "near_zero_threshold_A": 1e-09,
+    "network": {
+      "abs_max_A": 9.703724572318606e-06,
+      "abs_mean_A": 7.767191050334077e-07,
+      "count": 4792320,
+      "finite_ratio": 1.0,
+      "max_A": 9.216845683113206e-06,
+      "mean_A": -7.774277221983539e-09,
+      "near_zero_ratio": 0.0009294037008658051,
+      "p01_A": -2.990941311509232e-06,
+      "p50_A": -2.5952111570859415e-09,
+      "p99_A": 2.900552999562933e-06,
+      "std_A": 1.0637752438924508e-06,
+      "tia_saturation_ratio": 0.0
+    },
+    "predictions": [
+      68,
+      9,
+      55,
+      51
+    ],
+    "sample_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "saturation_definition": "abs(I_diff) * R_TIA >= signed-output voltage limit"
+  },
+  "dataset": "CIFAR-100 test",
+  "experiment": "CIFAR-100 Small Flash pre-TIA differential-current measurement",
+  "formula": "I_D(V_GS,V_TH)=I_S[softplus((V_GS-V_TH)/(2nU_T))^2-softplus((V_GS-V_TH-V_D)/(2nU_T))^2]/(1+V_GS/V_sat); I_diff=sum_k(I_D(V_GS,k,V_TH+,o,k)-I_D(V_GS,k,V_TH-,o,k))",
+  "full_test_evaluation": {
+    "correct": 7098,
+    "cross_entropy": 1.271237459373474,
+    "examples": 10000,
+    "seconds": 55.295716285705566,
+    "top1_accuracy": 70.98
+  },
+  "model_scale": "small",
+  "model_type": "hybrid",
+  "schema_version": 1,
+  "seed": 20260809
+}

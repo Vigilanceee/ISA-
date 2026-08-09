@@ -1,0 +1,3 @@
+gpus: 1
+environment:
+  TOKENIZERS_PARALLELISM: "false"

@@ -1,0 +1,528 @@
+{
+  "checkpoints": [
+    {
+      "bytes": 50733214,
+      "dataset": "cifar100",
+      "domain": "vision",
+      "file": "vision/cifar100/hybrid/mid/model.pt",
+      "model_type": "hybrid",
+      "parameterized_layers": 12,
+      "scale": "mid",
+      "sha256": "6a30612b93abc721f10bf22bb91c44e026d641a3c0e0184fa682ca6a0290cc68",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 6291468,
+          "finite_tensor_count": 200,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 12666260,
+          "parameterized_layers": 12,
+          "reload_ok": true,
+          "state_key": "model",
+          "tensor_count": 200
+        },
+        "heldout_verification": {
+          "argmax_agreement": 1.0,
+          "max_absolute_logit_error": 0.59375,
+          "mean_absolute_logit_error": 0.0797707736492157,
+          "mean_logit_cosine": 0.9956175088882446
+        }
+      }
+    },
+    {
+      "bytes": 63343342,
+      "dataset": "cifar100",
+      "domain": "vision",
+      "file": "vision/cifar100/physical/mid/model.pt",
+      "model_type": "physical",
+      "parameterized_layers": 24,
+      "scale": "mid",
+      "sha256": "a37b20ee3808662bc6d78f67d9437e3a3c06152b18ca13cf05f32871e77a5658",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 12582936,
+          "finite_tensor_count": 248,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 15815084,
+          "parameterized_layers": 24,
+          "reload_ok": true,
+          "state_key": "model",
+          "tensor_count": 248
+        },
+        "heldout_verification": {
+          "argmax_agreement": 1.0,
+          "max_absolute_logit_error": 0.65625,
+          "mean_absolute_logit_error": 0.08239694684743881,
+          "mean_logit_cosine": 0.9945755004882812
+        }
+      }
+    },
+    {
+      "bytes": 113814174,
+      "dataset": "cifar100",
+      "domain": "vision",
+      "file": "vision/cifar100/hybrid/small/model.pt",
+      "model_type": "hybrid",
+      "parameterized_layers": 12,
+      "scale": "small",
+      "sha256": "d2e3c703c9a4c36b87848108271c7f42f3c6e5473cb22fc3a0f022938f670d3a",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 14155788,
+          "finite_tensor_count": 200,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 28436500,
+          "parameterized_layers": 12,
+          "reload_ok": true,
+          "state_key": "model",
+          "tensor_count": 200
+        },
+        "heldout_verification": {
+          "argmax_agreement": 1.0,
+          "max_absolute_logit_error": 0.42578125,
+          "mean_absolute_logit_error": 0.0499906912446022,
+          "mean_logit_cosine": 0.9975926876068115
+        }
+      }
+    },
+    {
+      "bytes": 142159086,
+      "dataset": "cifar100",
+      "domain": "vision",
+      "file": "vision/cifar100/physical/small/model.pt",
+      "model_type": "physical",
+      "parameterized_layers": 24,
+      "scale": "small",
+      "sha256": "e42aed802c788592dad3dc8f51d0a04b51ab1816203a7424ec68986c5cedb61f",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 28311576,
+          "finite_tensor_count": 248,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 35519020,
+          "parameterized_layers": 24,
+          "reload_ok": true,
+          "state_key": "model",
+          "tensor_count": 248
+        },
+        "heldout_verification": {
+          "argmax_agreement": 1.0,
+          "max_absolute_logit_error": 0.4375,
+          "mean_absolute_logit_error": 0.051932305097579956,
+          "mean_logit_cosine": 0.9971187710762024
+        }
+      }
+    },
+    {
+      "bytes": 28629662,
+      "dataset": "cifar100",
+      "domain": "vision",
+      "file": "vision/cifar100/hybrid/tiny/model.pt",
+      "model_type": "hybrid",
+      "parameterized_layers": 12,
+      "scale": "tiny",
+      "sha256": "4a5a45bd1260020c5127184b29074049ace7c4e4afd497d3e599356fccab8b3a",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 3538956,
+          "finite_tensor_count": 200,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 7140436,
+          "parameterized_layers": 12,
+          "reload_ok": true,
+          "state_key": "model",
+          "tensor_count": 200
+        },
+        "heldout_verification": {
+          "argmax_agreement": 0.9375,
+          "max_absolute_logit_error": 0.546875,
+          "mean_absolute_logit_error": 0.07809349149465561,
+          "mean_logit_cosine": 0.9962428212165833
+        }
+      }
+    },
+    {
+      "bytes": 35731630,
+      "dataset": "cifar100",
+      "domain": "vision",
+      "file": "vision/cifar100/physical/tiny/model.pt",
+      "model_type": "physical",
+      "parameterized_layers": 24,
+      "scale": "tiny",
+      "sha256": "2ca2273fe0b76131191fe7843fe90e23ae2dd54a6c9d8c4798ef787a4720dc95",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 7077912,
+          "finite_tensor_count": 248,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 8912236,
+          "parameterized_layers": 24,
+          "reload_ok": true,
+          "state_key": "model",
+          "tensor_count": 248
+        },
+        "heldout_verification": {
+          "argmax_agreement": 1.0,
+          "max_absolute_logit_error": 0.515625,
+          "mean_absolute_logit_error": 0.0939745083451271,
+          "mean_logit_cosine": 0.9938260316848755
+        }
+      }
+    },
+    {
+      "bytes": 51708446,
+      "dataset": "imagenet200",
+      "domain": "vision",
+      "file": "vision/imagenet200/hybrid/mid/model.pt",
+      "model_type": "hybrid",
+      "parameterized_layers": 12,
+      "scale": "mid",
+      "sha256": "f8c63a44bc7699191f7bfa10e806bbd764fcb0c375c0b1c104d4dfbc47ad83a8",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 6291468,
+          "finite_tensor_count": 200,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 12910072,
+          "parameterized_layers": 12,
+          "reload_ok": true,
+          "state_key": "model",
+          "tensor_count": 200
+        },
+        "heldout_verification": {
+          "argmax_agreement": 1.0,
+          "max_absolute_logit_error": 0.418212890625,
+          "mean_absolute_logit_error": 0.0944962278008461,
+          "mean_logit_cosine": 0.9919146299362183
+        }
+      }
+    },
+    {
+      "bytes": 64318574,
+      "dataset": "imagenet200",
+      "domain": "vision",
+      "file": "vision/imagenet200/physical/mid/model.pt",
+      "model_type": "physical",
+      "parameterized_layers": 24,
+      "scale": "mid",
+      "sha256": "df422cd7d33ef675bb0e92778cc7dbde846d722ba304cbd117775fc5c6fa5700",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 12582936,
+          "finite_tensor_count": 248,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 16058896,
+          "parameterized_layers": 24,
+          "reload_ok": true,
+          "state_key": "model",
+          "tensor_count": 248
+        },
+        "heldout_verification": {
+          "argmax_agreement": 1.0,
+          "max_absolute_logit_error": 0.546875,
+          "mean_absolute_logit_error": 0.08896533399820328,
+          "mean_logit_cosine": 0.9905202984809875
+        }
+      }
+    },
+    {
+      "bytes": 115276894,
+      "dataset": "imagenet200",
+      "domain": "vision",
+      "file": "vision/imagenet200/hybrid/small/model.pt",
+      "model_type": "hybrid",
+      "parameterized_layers": 12,
+      "scale": "small",
+      "sha256": "1ddd98bcefe8823606eda42e80dd1e30251c5698a576a20b35d132ba4f97d341",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 14155788,
+          "finite_tensor_count": 200,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 28802168,
+          "parameterized_layers": 12,
+          "reload_ok": true,
+          "state_key": "model",
+          "tensor_count": 200
+        },
+        "heldout_verification": {
+          "argmax_agreement": 1.0,
+          "max_absolute_logit_error": 0.40625,
+          "mean_absolute_logit_error": 0.07301171869039536,
+          "mean_logit_cosine": 0.9939184188842773
+        }
+      }
+    },
+    {
+      "bytes": 143621742,
+      "dataset": "imagenet200",
+      "domain": "vision",
+      "file": "vision/imagenet200/physical/small/model.pt",
+      "model_type": "physical",
+      "parameterized_layers": 24,
+      "scale": "small",
+      "sha256": "6db0a5c547e40a14a01f9925b707f31f4cf8d9f450fd0e89d743f6a24967e0ca",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 28311576,
+          "finite_tensor_count": 248,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 35884688,
+          "parameterized_layers": 24,
+          "reload_ok": true,
+          "state_key": "model",
+          "tensor_count": 248
+        },
+        "heldout_verification": {
+          "argmax_agreement": 1.0,
+          "max_absolute_logit_error": 0.9375,
+          "mean_absolute_logit_error": 0.1113726794719696,
+          "mean_logit_cosine": 0.980337381362915
+        }
+      }
+    },
+    {
+      "bytes": 29361182,
+      "dataset": "imagenet200",
+      "domain": "vision",
+      "file": "vision/imagenet200/hybrid/tiny/model.pt",
+      "model_type": "hybrid",
+      "parameterized_layers": 12,
+      "scale": "tiny",
+      "sha256": "ab90bbe5e7d1e4f42eb0c74db144698f2615a5669ab0e9b3fbcf9199bf32a40a",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 3538956,
+          "finite_tensor_count": 200,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 7323320,
+          "parameterized_layers": 12,
+          "reload_ok": true,
+          "state_key": "model",
+          "tensor_count": 200
+        },
+        "heldout_verification": {
+          "argmax_agreement": 1.0,
+          "max_absolute_logit_error": 0.546875,
+          "mean_absolute_logit_error": 0.12896129488945007,
+          "mean_logit_cosine": 0.9882226586341858
+        }
+      }
+    },
+    {
+      "bytes": 36463150,
+      "dataset": "imagenet200",
+      "domain": "vision",
+      "file": "vision/imagenet200/physical/tiny/model.pt",
+      "model_type": "physical",
+      "parameterized_layers": 24,
+      "scale": "tiny",
+      "sha256": "7e6b4a7ff1203a0d917ba6efbc29b885adb269a27e5f6f4b8e7961455883518a",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 7077912,
+          "finite_tensor_count": 248,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 9095120,
+          "parameterized_layers": 24,
+          "reload_ok": true,
+          "state_key": "model",
+          "tensor_count": 248
+        },
+        "heldout_verification": {
+          "argmax_agreement": 1.0,
+          "max_absolute_logit_error": 0.40625,
+          "mean_absolute_logit_error": 0.09696397930383682,
+          "mean_logit_cosine": 0.9894895553588867
+        }
+      }
+    },
+    {
+      "bytes": 190916570,
+      "dataset": "openwebtext",
+      "domain": "language",
+      "file": "language/hybrid/mid/model.pt",
+      "model_type": "hybrid",
+      "parameterized_layers": 12,
+      "scale": "mid",
+      "sha256": "b2a83c2696ddc681145484dd1efb0faa40fc3050568fe80b12bb3c58ffed8a74",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 14155788,
+          "finite_tensor_count": 221,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 67009584,
+          "parameterized_layers": 12,
+          "reload_ok": true,
+          "state_key": "model_state",
+          "tensor_count": 221
+        },
+        "heldout_verification": {
+          "argmax_agreement": 0.9140625,
+          "max_absolute_logit_error": 2.7578125,
+          "mean_absolute_logit_error": 0.15177500247955322,
+          "mean_logit_cosine": 0.9998908638954163
+        }
+      }
+    },
+    {
+      "bytes": 219219106,
+      "dataset": "openwebtext",
+      "domain": "language",
+      "file": "language/physical/mid/model.pt",
+      "model_type": "physical",
+      "parameterized_layers": 24,
+      "scale": "mid",
+      "sha256": "9e9cbcad470d3c01d051812812cb775eb37060caf5e7d00d6fdd7609a9ea67cd",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 28311576,
+          "finite_tensor_count": 245,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 74082888,
+          "parameterized_layers": 24,
+          "reload_ok": true,
+          "state_key": "model_state",
+          "tensor_count": 245
+        },
+        "heldout_verification": {
+          "argmax_agreement": 0.78515625,
+          "max_absolute_logit_error": 7.5,
+          "mean_absolute_logit_error": 0.5259121060371399,
+          "mean_logit_cosine": 0.9988771677017212
+        }
+      }
+    },
+    {
+      "bytes": 608252378,
+      "dataset": "openwebtext",
+      "domain": "language",
+      "file": "language/hybrid/small/model.pt",
+      "model_type": "hybrid",
+      "parameterized_layers": 12,
+      "scale": "small",
+      "sha256": "738a05446c57500dd9e24f20393670ab9304931b1a3ce79d0f44c08d131b8633",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 56623116,
+          "finite_tensor_count": 221,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 190642224,
+          "parameterized_layers": 12,
+          "reload_ok": true,
+          "state_key": "model_state",
+          "tensor_count": 221
+        },
+        "heldout_verification": {
+          "argmax_agreement": 0.953125,
+          "max_absolute_logit_error": 1.8125,
+          "mean_absolute_logit_error": 0.12486077100038528,
+          "mean_logit_cosine": 0.9994761943817139
+        }
+      }
+    },
+    {
+      "bytes": 721471138,
+      "dataset": "openwebtext",
+      "domain": "language",
+      "file": "language/physical/small/model.pt",
+      "model_type": "physical",
+      "parameterized_layers": 24,
+      "scale": "small",
+      "sha256": "90c6fdcdbd6ae1a43955839b9fbee4cc22ada0c56e2c14d26acb285b1e9759c9",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 113246232,
+          "finite_tensor_count": 245,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 218944584,
+          "parameterized_layers": 24,
+          "reload_ok": true,
+          "state_key": "model_state",
+          "tensor_count": 245
+        },
+        "heldout_verification": {
+          "argmax_agreement": 0.828125,
+          "max_absolute_logit_error": 8.25,
+          "mean_absolute_logit_error": 0.45118024945259094,
+          "mean_logit_cosine": 0.9926495552062988
+        }
+      }
+    },
+    {
+      "bytes": 67182938,
+      "dataset": "openwebtext",
+      "domain": "language",
+      "file": "language/hybrid/tiny/model.pt",
+      "model_type": "hybrid",
+      "parameterized_layers": 12,
+      "scale": "tiny",
+      "sha256": "8c74e17687d3af68f09a12e9faa3a503967f0654c513b23c18b2cb48a8c1d568",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 3538956,
+          "finite_tensor_count": 221,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 26426928,
+          "parameterized_layers": 12,
+          "reload_ok": true,
+          "state_key": "model_state",
+          "tensor_count": 221
+        },
+        "heldout_verification": {
+          "argmax_agreement": 0.921875,
+          "max_absolute_logit_error": 3.28125,
+          "mean_absolute_logit_error": 0.18761825561523438,
+          "mean_logit_cosine": 0.9988782405853271
+        }
+      }
+    },
+    {
+      "bytes": 74261026,
+      "dataset": "openwebtext",
+      "domain": "language",
+      "file": "language/physical/tiny/model.pt",
+      "model_type": "physical",
+      "parameterized_layers": 24,
+      "scale": "tiny",
+      "sha256": "41c7274cfccab59e3497b327d34e86a419bad40a14bddc133d9aa7ff21c54d6e",
+      "validation": {
+        "artifact": {
+          "checked_parameter_values": 7077912,
+          "finite_tensor_count": 245,
+          "max_absolute_parameter_error": 0.0,
+          "model_config_plain_dict": true,
+          "parameter_count": 28194120,
+          "parameterized_layers": 24,
+          "reload_ok": true,
+          "state_key": "model_state",
+          "tensor_count": 245
+        },
+        "heldout_verification": {
+          "argmax_agreement": 0.87109375,
+          "max_absolute_logit_error": 5.75,
+          "mean_absolute_logit_error": 0.29359936714172363,
+          "mean_logit_cosine": 0.9975767135620117
+        }
+      }
+    }
+  ],
+  "format_version": 1,
+  "formula": "I=I_S*(softplus((V-Vth)/(2*n*U_T))^2-softplus((V-Vth-V_D)/(2*n*U_T))^2)/(1+V/V_sat)"
+}

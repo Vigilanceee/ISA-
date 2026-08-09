@@ -1,0 +1,16 @@
+name: flash_transistor_ekv
+description: Fitted Flash-transistor EKV parameter set used by the physical projections in the Hybrid and Physical ViT/GPT FFNs.
+units:
+  current: A
+  voltage: V
+parameters:
+  I_S: 7.5875e-7
+  n: 4.1360
+  U_T: 0.0259
+  V_D: 0.1
+  V_sat: 8.2624
+  R_TIA: 1.0e5
+ranges:
+  Vth: [0.0, 5.0]
+  input_voltage: [0.0, 4.0]
+  signed_output_voltage: [-4.0, 4.0]

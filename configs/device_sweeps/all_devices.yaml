@@ -1,0 +1,39 @@
+name: device-sweeps
+description: MLP/MNIST and VGG8/CIFAR-10 Optuna searches over five device models.
+paths:
+  data: data/device_sweeps
+  output_root: outputs/device_sweeps
+defaults:
+  module: isa.device_sweeps.search
+  success_marker: "{output_root}/.completed/{experiment}.json"
+  global_batch_size: 128
+  batch_arg: batch-size
+  args:
+    device-config: configs/device_sweeps/device_params.yaml
+    search-config: configs/device_sweeps/search_matrix.yaml
+    data-dir: "{data}"
+    workers: 4
+    seed: 20260728
+    trials: 5
+order:
+  - mlp_reram
+  - mlp_pcm
+  - mlp_stt
+  - mlp_fefet
+  - mlp_flash
+  - vgg8_reram
+  - vgg8_pcm
+  - vgg8_stt
+  - vgg8_fefet
+  - vgg8_flash
+experiments:
+  mlp_reram: {args: {model: mlp, device: reram, run-root: "{output_root}/mlp"}, completion: "{output_root}/mlp/reram/summary.csv"}
+  mlp_pcm: {args: {model: mlp, device: pcm, run-root: "{output_root}/mlp"}, completion: "{output_root}/mlp/pcm/summary.csv"}
+  mlp_stt: {args: {model: mlp, device: stt, run-root: "{output_root}/mlp"}, completion: "{output_root}/mlp/stt/summary.csv"}
+  mlp_fefet: {args: {model: mlp, device: fefet, run-root: "{output_root}/mlp"}, completion: "{output_root}/mlp/fefet/summary.csv"}
+  mlp_flash: {args: {model: mlp, device: flash, run-root: "{output_root}/mlp"}, completion: "{output_root}/mlp/flash/summary.csv"}
+  vgg8_reram: {args: {model: vgg8, device: reram, run-root: "{output_root}/vgg8"}, completion: "{output_root}/vgg8/reram/summary.csv"}
+  vgg8_pcm: {args: {model: vgg8, device: pcm, run-root: "{output_root}/vgg8"}, completion: "{output_root}/vgg8/pcm/summary.csv"}
+  vgg8_stt: {args: {model: vgg8, device: stt, run-root: "{output_root}/vgg8"}, completion: "{output_root}/vgg8/stt/summary.csv"}
+  vgg8_fefet: {args: {model: vgg8, device: fefet, run-root: "{output_root}/vgg8"}, completion: "{output_root}/vgg8/fefet/summary.csv"}
+  vgg8_flash: {args: {model: vgg8, device: flash, run-root: "{output_root}/vgg8"}, completion: "{output_root}/vgg8/flash/summary.csv"}

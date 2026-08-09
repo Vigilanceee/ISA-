@@ -1,0 +1,13 @@
+{
+  "checkpoint_count": 18,
+  "embedded_parameter_verified": 18,
+  "finite_state_verified": 18,
+  "format_version": 1,
+  "formula": "I=I_S*(softplus((V-Vth)/(2*n*U_T))^2-softplus((V-Vth-V_D)/(2*n*U_T))^2)/(1+V/V_sat)",
+  "language_checkpoint_count": 6,
+  "language_loader_verified": 6,
+  "reload_verified": 18,
+  "sha256_verified": 18,
+  "total_bytes": 2756464252,
+  "vision_checkpoint_count": 12
+}

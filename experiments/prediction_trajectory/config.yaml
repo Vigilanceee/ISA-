@@ -1,0 +1,58 @@
+name: prediction-trajectory-vgg8-cifar10
+description: Cross-device VGG8 prediction trajectories on a shared CIFAR-10 probe set.
+
+devices:
+  - reram
+  - pcm
+  - stt
+  - fefet
+  - flash
+
+seeds: [0, 1, 2]
+
+probe:
+  size: 1000
+  seed: 20260802
+
+training:
+  epochs: 200
+  snapshot_interval: 5
+  batch_size: 128
+  workers: 0
+  optimizer: adamw
+  learning_rate: 0.001
+  weight_decay: 0.00005
+  label_smoothing: 0.05
+  grad_clip: 1.0
+  bf16: true
+  channels_last: true
+
+analysis:
+  candidate_accuracy_milestones: [0.20, 0.40, 0.60, 0.70, 0.80, 0.90]
+  milestone_count_fallback: 5
+  bootstrap_repeats: 2000
+  bootstrap_seed: 20260802
+
+# The physical initialization and TIA settings are the best values from the
+# controlled 2026-07-29 VGG8 search. The optimizer recipe above is shared.
+device_hyperparameters:
+  reram:
+    init_center: 0.605722504
+    init_half_width: 0.041907749
+    tia_r: 279.4079
+  pcm:
+    init_center: 0.017297508
+    init_half_width: 0.005242420
+    tia_r: 650.6604
+  stt:
+    init_center: 2.343033425
+    init_half_width: 0.055643056
+    tia_r: 1671.1635
+  fefet:
+    init_center: 2.214381698
+    init_half_width: 1.020930704
+    tia_r: 133.2815
+  flash:
+    init_center: 0.522874149
+    init_half_width: 0.064980982
+    tia_r: 22150.2274
