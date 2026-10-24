@@ -18,7 +18,8 @@ def get_cifar10_loaders(batch_size: int = 128,
                         data_dir: str = './data',
                         num_workers: int = 0,
                         distributed: bool = False,
-                        device_type: str = 'reram'):
+                        device_type: str = 'reram',
+                        download: bool = True):
     """
     返回 (train_loader, val_loader[, train_sampler])。
 
@@ -43,9 +44,9 @@ def get_cifar10_loaders(batch_size: int = 128,
     ])
 
     train_set = datasets.CIFAR10(root=data_dir, train=True,
-                                 download=True, transform=transform_train)
+                                 download=download, transform=transform_train)
     test_set  = datasets.CIFAR10(root=data_dir, train=False,
-                                 download=True, transform=transform_test)
+                                 download=download, transform=transform_test)
 
     train_sampler = DistributedSampler(train_set) if distributed else None
     val_sampler   = DistributedSampler(test_set, shuffle=False) if distributed else None
@@ -78,7 +79,8 @@ def get_mnist_loaders(batch_size: int = 128,
                       data_dir: str = './data',
                       num_workers: int = 0,
                       distributed: bool = False,
-                      device_type: str = 'reram'):
+                      device_type: str = 'reram',
+                      download: bool = True):
     """
     返回 MNIST 的 (train_loader, val_loader[, train_sampler])。
     """
@@ -97,9 +99,9 @@ def get_mnist_loaders(batch_size: int = 128,
     ])
 
     train_set = datasets.MNIST(root=data_dir, train=True,
-                               download=True, transform=transform_train)
+                               download=download, transform=transform_train)
     test_set = datasets.MNIST(root=data_dir, train=False,
-                              download=True, transform=transform_test)
+                              download=download, transform=transform_test)
 
     train_sampler = DistributedSampler(train_set) if distributed else None
     val_sampler = DistributedSampler(test_set, shuffle=False) if distributed else None

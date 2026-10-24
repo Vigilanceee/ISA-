@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "architecture": "MLP",
+  "dataset": "MNIST",
+  "device": "STT",
+  "device_parameters": {
+    "I0_stt": 331.0,
+    "TMR": 1.2,
+    "alpha": 0.79,
+    "init_center": 1.5707963,
+    "w_max": 3.1415926,
+    "w_min": 0.0,
+    "conv_backend": "reference",
+    "linear_backend": "reference",
+    "calibration_slots": false
+  },
+  "model_parameters": {
+    "tia_r": 10497.143746323101,
+    "w_init_max": 0.13888446444907498,
+    "v_min": -1.0,
+    "v_max": 1.0
+  },
+  "quantization": {
+    "enabled": false,
+    "input_bits": 8,
+    "output_bits": 8
+  },
+  "checkpoint_sha256": "6a6a71183ec41c705a6bc775e47a822514ae1bb5ad3251c13de551e457a07409",
+  "training_validation_accuracy": 0.9718,
+  "evaluation_split_used_for_selection": true,
+  "training": {
+    "trial": 8,
+    "epochs": 50,
+    "batch_size": 128,
+    "hyperparameters": {
+      "label_smoothing": 0.04789981096259363,
+      "lr": 0.00015344224492314204,
+      "tia_r": 10497.143746323101,
+      "w_init_max": 0.13888446444907498,
+      "weight_decay": 2.2320738921263044e-06
+    },
+    "best_epoch": 49
+  },
+  "method": "device_response_training"
+}

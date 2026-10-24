@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "architecture": "MLP",
+  "dataset": "MNIST",
+  "device": "PCM",
+  "device_parameters": {
+    "I0_pcm": 3976.6,
+    "I0_pcm_decay": 53.6321,
+    "V_T_pcm": 1.0,
+    "chunk_n": 32,
+    "init_center": 0.02,
+    "lut_enabled": false,
+    "lut_v_max": 1.0,
+    "lut_v_min": -1.0,
+    "lut_v_size": 512,
+    "lut_w_size": 512,
+    "planar_enabled": true,
+    "planar_order": 7,
+    "w_max": 0.12,
+    "w_min": 0.0,
+    "conv_backend": "planar",
+    "linear_backend": "planar",
+    "calibration_slots": false
+  },
+  "model_parameters": {
+    "tia_r": 571859.5921452793,
+    "w_init_max": 0.005324318055412333,
+    "v_min": -1.0,
+    "v_max": 1.0
+  },
+  "quantization": {
+    "enabled": false,
+    "input_bits": 8,
+    "output_bits": 8
+  },
+  "checkpoint_sha256": "96b8c4708afcc07e32bee091da40e4e3e411f8874be468666e8c2ea78ba88abd",
+  "training_validation_accuracy": 0.9732,
+  "evaluation_split_used_for_selection": true,
+  "training": {
+    "trial": 11,
+    "epochs": 50,
+    "batch_size": 128,
+    "hyperparameters": {
+      "label_smoothing": 0.09995448582570039,
+      "lr": 0.00035314877639363673,
+      "tia_r": 571859.5921452793,
+      "w_init_max": 0.005324318055412333,
+      "weight_decay": 1.029718186288019e-06
+    },
+    "best_epoch": 46
+  },
+  "method": "device_response_training"
+}

@@ -22,7 +22,7 @@ from isa.approximations.node_planar import (
     node_planar_linear,
     state_nodes,
 )
-from isa.device_sweeps.backend import select_primitive_backend
+from isa.device_sweeps.backend import configured_layer_backend, select_primitive_backend
 from isa.device_sweeps.models.quantization import quantize_uniform_states
 from isa.kernels.transformer_ffn.ekv_triton import TritonEKVMatmulFn
 
@@ -31,6 +31,7 @@ from .fefet_triton import FeFETFunction
 from .flash_triton import FlashFunction, FlashSplitFunction
 from .lut_triton import FeFETLUTFunction, FlashLUTFunction, PCMLUTFunction, PCMPlanarFunction
 from .pcm_triton import PCMFunction
+from .polynomial import FlashPolynomialFunction
 from .reram_triton import ReRAMFunction
 from .stt_triton import STTFunction
 
@@ -89,6 +90,16 @@ def _maybe_quantize_weight(theta: torch.Tensor, device_params: dict):
     return quantize_uniform_states(theta, lo, hi, states)
 
 
+def _physical_state(theta: torch.Tensor, device_params: dict):
+    state = _maybe_quantize_weight(theta, device_params)
+    mapping = str(device_params.get("state_mapping", "identity"))
+    if mapping == "identity":
+        return state
+    if mapping == "tanh":
+        return state.tanh()
+    raise ValueError(f"Unsupported device state mapping: {mapping}")
+
+
 def _select_nvm_func(
     device_type: str,
     device_params: dict,
@@ -106,6 +117,10 @@ def _select_nvm_func(
         return _LUT_FUNC_MAP.get(device_type, _FUNC_MAP[device_type])
     if primitive_backend == "planar":
         return _PLANAR_FUNC_MAP.get(device_type, _FUNC_MAP[device_type])
+    if primitive_backend == "polynomial":
+        if device_type != "flash":
+            raise ValueError("The polynomial checkpoint backend is supported for Flash")
+        return FlashPolynomialFunction
     raise AssertionError(f"Unhandled primitive backend: {primitive_backend}")
 
 def _default_init_center(device_type: str, device_params: dict,
@@ -139,7 +154,10 @@ def _init_weights(out_features: int, in_features: int,
         theta_pos = torch.empty(out_features, in_features).normal_(center, std)
         theta_neg = torch.empty(out_features, in_features).normal_(center, std)
     else:
-        half_width = max(1e-6, float(w_init_max))
+        multiplier = float(device_params.get("init_half_width_multiplier", 1.0))
+        if multiplier <= 0:
+            raise ValueError("init_half_width_multiplier must be positive")
+        half_width = max(1e-6, float(w_init_max) * multiplier)
         theta_pos = torch.empty(out_features, in_features).uniform_(
             center - half_width, center + half_width
         )
@@ -160,9 +178,7 @@ class NVM_Linear(nn.Module):
         self.out_features = out_features
         self.device_params = device_params or {}
         self.device_type = device_type
-        self.backend = str(
-            self.device_params.get("linear_backend", self.device_params.get("conv_backend", "reference"))
-        )
+        self.backend = configured_layer_backend(self.device_params, "linear")
         self.nvm_func = _select_nvm_func(
             device_type, self.device_params, self.backend
         )
@@ -182,8 +198,8 @@ class NVM_Linear(nn.Module):
         self.register_buffer("planar_state_nodes", nodes, persistent=False)
 
     def forward(self, v_in: torch.Tensor) -> torch.Tensor:
-        theta_pos = _maybe_quantize_weight(self.theta_pos, self.device_params)
-        theta_neg = _maybe_quantize_weight(self.theta_neg, self.device_params)
+        theta_pos = _physical_state(self.theta_pos, self.device_params)
+        theta_neg = _physical_state(self.theta_neg, self.device_params)
         if self.backend == "factorized":
             return factorized_linear(
                 v_in, theta_pos, theta_neg,
@@ -223,7 +239,7 @@ class NVM_Conv2d(nn.Module):
         self.padding = (padding, padding) if isinstance(padding, int) else padding
         self.device_params = device_params or {}
         self.device_type = device_type
-        self.backend = str(self.device_params.get("conv_backend", "reference"))
+        self.backend = configured_layer_backend(self.device_params, "conv")
         self.nvm_func = _select_nvm_func(
             device_type, self.device_params, self.backend
         )
@@ -251,8 +267,8 @@ class NVM_Conv2d(nn.Module):
         H_out = (H + 2 * pH - kH) // sH + 1
         W_out = (W + 2 * pW - kW) // sW + 1
 
-        theta_pos = _maybe_quantize_weight(self.theta_pos, self.device_params)
-        theta_neg = _maybe_quantize_weight(self.theta_neg, self.device_params)
+        theta_pos = _physical_state(self.theta_pos, self.device_params)
+        theta_neg = _physical_state(self.theta_neg, self.device_params)
 
         if self.backend == "factorized":
             return factorized_conv2d(

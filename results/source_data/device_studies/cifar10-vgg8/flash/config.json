@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "architecture": "VGG8",
+  "dataset": "CIFAR-10",
+  "device": "Flash",
+  "device_parameters": {
+    "I_S": 0.75875,
+    "U_T": 0.026,
+    "V_D": 0.1,
+    "V_sat": 8.2624,
+    "direct_conv_enabled": false,
+    "fast_chunk_m": 1024,
+    "init_center": 2.5,
+    "lut_bf16_output": true,
+    "lut_enabled": false,
+    "lut_size": 512,
+    "lut_x_max": 4.0,
+    "lut_x_min": -5.0,
+    "n": 4.136,
+    "poly_bf16": true,
+    "poly_degree": 5,
+    "poly_enabled": true,
+    "poly_fit_points": 4096,
+    "poly_x_max": 4.0,
+    "poly_x_min": -5.0,
+    "w_max": 5.0,
+    "w_min": 0.0,
+    "conv_backend": "polynomial",
+    "linear_backend": "polynomial",
+    "tia_v_min": 0.0,
+    "tia_v_max": 4.0,
+    "calibration_slots": false
+  },
+  "model_parameters": {
+    "tia_r": 7726407.635808101,
+    "w_init_max": 0.9335041941002337,
+    "v_min": 0.0,
+    "v_max": 4.0
+  },
+  "quantization": {
+    "enabled": false,
+    "input_bits": 8,
+    "output_bits": 8
+  },
+  "checkpoint_sha256": "e4dbdf39f42d2949c8a07cecdf2f4b390a879157f33e91771b649dd3b3d260fb",
+  "training_validation_accuracy": 0.9014,
+  "evaluation_split_used_for_selection": true,
+  "training": {
+    "trial": 10,
+    "epochs": 200,
+    "batch_size": 128,
+    "hyperparameters": {
+      "label_smoothing": 0.03302429793773576,
+      "lr": 0.002158919763853675,
+      "tia_r": 7726407.635808101,
+      "w_init_max": 0.9335041941002337,
+      "weight_decay": 6.47176209339102e-05
+    },
+    "best_epoch": 182
+  },
+  "method": "device_response_training"
+}

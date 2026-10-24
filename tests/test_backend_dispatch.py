@@ -1,4 +1,5 @@
 from isa.device_sweeps.backend import (
+    configured_layer_backend,
     normalize_backend_parameters,
     select_primitive_backend,
 )
@@ -17,6 +18,15 @@ def test_explicit_lut_is_still_selectable():
         {"lut_enabled": False}, explicit_backend="lut"
     )
     assert selected == "lut"
+
+
+def test_saved_flag_only_configs_select_the_recorded_operator():
+    assert configured_layer_backend({"lut_enabled": True}, "linear") == "lut"
+    assert configured_layer_backend({"planar_enabled": True}, "conv") == "planar"
+    assert configured_layer_backend({"planar_enabled": True}, "linear") == "planar"
+    assert configured_layer_backend({"lut_enabled": True, "linear_backend": "exact"}, "linear") == "exact"
+    assert select_primitive_backend({}, "planar") == "planar"
+    assert configured_layer_backend({"poly_enabled": True}, "linear") == "polynomial"
 
 
 def test_exact_override_normalizes_approximation_flags():

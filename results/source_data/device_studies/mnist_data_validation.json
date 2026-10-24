@@ -1,0 +1,76 @@
+{
+  "status": "verified",
+  "source": "torchvision.datasets.MNIST.resources",
+  "files": [
+    {
+      "file": "train-images-idx3-ubyte.gz",
+      "official_md5": "f68b3c2dcbeaaa9fbdd348bbdeb94873",
+      "actual_md5": "f68b3c2dcbeaaa9fbdd348bbdeb94873",
+      "raw_sha256": "ba891046e6505d7aadcbbe25680a0738ad16aec93bde7f9b65e87a2fc25776db",
+      "count": 60000,
+      "shape": [
+        28,
+        28
+      ],
+      "raw_gzip_identical": true,
+      "bytes": 47040016
+    },
+    {
+      "file": "train-labels-idx1-ubyte.gz",
+      "official_md5": "d53e105ee54ea40749a09fcbcd1e9432",
+      "actual_md5": "d53e105ee54ea40749a09fcbcd1e9432",
+      "raw_sha256": "65a50cbbf4e906d70832878ad85ccda5333a97f0f4c3dd2ef09a8a9eef7101c5",
+      "count": 60000,
+      "shape": [],
+      "raw_gzip_identical": true,
+      "bytes": 60008,
+      "class_counts": [
+        5923,
+        6742,
+        5958,
+        6131,
+        5842,
+        5421,
+        5918,
+        6265,
+        5851,
+        5949
+      ]
+    },
+    {
+      "file": "t10k-images-idx3-ubyte.gz",
+      "official_md5": "9fb629c4189551a2d022fa330f9573f3",
+      "actual_md5": "9fb629c4189551a2d022fa330f9573f3",
+      "raw_sha256": "0fa7898d509279e482958e8ce81c8e77db3f2f8254e26661ceb7762c4d494ce7",
+      "count": 10000,
+      "shape": [
+        28,
+        28
+      ],
+      "raw_gzip_identical": true,
+      "bytes": 7840016
+    },
+    {
+      "file": "t10k-labels-idx1-ubyte.gz",
+      "official_md5": "ec29112dd5afa0611ce80d1b7f02629c",
+      "actual_md5": "ec29112dd5afa0611ce80d1b7f02629c",
+      "raw_sha256": "ff7bcfd416de33731a308c3f266cc351222c34898ecbeaf847f06e48f7ec33f2",
+      "count": 10000,
+      "shape": [],
+      "raw_gzip_identical": true,
+      "bytes": 10008,
+      "class_counts": [
+        980,
+        1135,
+        1032,
+        1010,
+        982,
+        892,
+        958,
+        1028,
+        974,
+        1009
+      ]
+    }
+  ]
+}

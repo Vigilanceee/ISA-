@@ -266,14 +266,32 @@ source repository:
 - [ISA Language checkpoints](https://huggingface.co/Viligance/ISA-Language):
   OpenWebText models evaluated on OpenWebText, TinyStories, and BLiMP;
 - [ISA Device checkpoints](https://huggingface.co/Viligance/ISA-Device-Checkpoints):
-  selected VGG8/CIFAR-10 checkpoints for ReRAM, PCM, STT, and Flash.
+  five-device MLP/MNIST and VGG8/CIFAR-10 checkpoints, including FeFET
+  surrogate-gradient/calibration models and the manuscript PCM panel packages.
 
 Each model repository includes SHA256 checksums and release-validation
-metadata. Threshold offsets and TIA gains are embedded in the checkpoint, so
-no auxiliary mapping file is required for inference.
+metadata. Transformer threshold offsets and TIA gains are embedded in their
+checkpoints. Device-study checkpoints additionally require the supplied
+`config.json` for physical-response, calibration and TIA settings.
 
-The corresponding device-study metrics are available in
-[`results/device_vgg8_selected.csv`](results/device_vgg8_selected.csv).
+List, download and strictly evaluate the device checkpoints:
+
+```bash
+python -m isa.device_sweeps.checkpoints --list
+python -m isa.device_sweeps.checkpoints \
+  --entry mnist-mlp-fefet --download-only --download-dir checkpoints/downloaded
+python -m isa.device_sweeps.checkpoints \
+  --entry cifar10-vgg8-fefet --data /datasets --output artifacts/fefet_eval.json
+```
+
+[`checkpoints/device_studies.json`](checkpoints/device_studies.json) pins the
+immutable weight revision, configuration, SHA256 and complete evaluation
+evidence for all twelve device packages. See
+[`docs/reproducing_device_studies.md`](docs/reproducing_device_studies.md) for
+tensor inspection, selected-configuration retraining, and figure-source data.
+The device metrics are available in
+[`results/device_studies.csv`](results/device_studies.csv). The official test
+splits were used for validation and checkpoint selection in these studies.
 
 ## Current measurements
 
@@ -319,3 +337,8 @@ python -m isa matrix \
   --profile profiles/4gpu.yaml \
   --dry-run
 ```
+
+## License
+
+ISA code and released device checkpoints are distributed under the
+[MIT License](LICENSE). Third-party dependencies retain their own licenses.

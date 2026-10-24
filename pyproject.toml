@@ -7,6 +7,7 @@ name = "in-synapse-activation"
 version = "0.1.0"
 description = "Physical activation and compute-in-memory FFNs for vision and language models"
 readme = "README.md"
+license = {file = "LICENSE"}
 requires-python = ">=3.10,<3.13"
 dependencies = [
   "datasets>=2.18",

@@ -1,0 +1,75 @@
+{
+  "architecture": "MLP",
+  "dataset": "MNIST",
+  "device": "PCM",
+  "checkpoint_sha256": "523e42e50742066b7b2faf187b4fb13c55f613eebf51a8a5b0da0aa0d7a9d604",
+  "strict_load": true,
+  "examples": 10000,
+  "correct": 9799,
+  "accuracy": 0.9799,
+  "cross_entropy": 0.12062150944471359,
+  "training_validation_accuracy": 0.9799,
+  "difference_percentage_points": 0.0,
+  "dataset_split": "official_test",
+  "used_for_checkpoint_selection": true,
+  "elapsed_seconds": 0.849321885034442,
+  "runtime": {
+    "python": "3.10.12",
+    "torch": "2.3.0a0+6ddf5cf85e.nv24.04",
+    "cuda": "12.4",
+    "gpu": "NVIDIA H100 80GB HBM3"
+  },
+  "configuration": {
+    "schema_version": 1,
+    "architecture": "MLP",
+    "dataset": "MNIST",
+    "device": "PCM",
+    "device_parameters": {
+      "I0_pcm": 1.0,
+      "V_T_pcm": 1.0,
+      "chunk_n": 32,
+      "init_center": 0.5,
+      "lut_enabled": false,
+      "lut_v_max": 1.0,
+      "lut_v_min": -1.0,
+      "lut_v_size": 512,
+      "lut_w_size": 512,
+      "planar_enabled": true,
+      "planar_order": 7,
+      "w_max": 1.0,
+      "w_min": 0.0,
+      "conv_backend": "planar",
+      "linear_backend": "planar",
+      "state_mapping": "tanh",
+      "calibration_slots": false
+    },
+    "model_parameters": {
+      "tia_r": 633383.1162300591,
+      "w_init_max": 0.17500165934959674,
+      "v_min": -1.0,
+      "v_max": 1.0
+    },
+    "quantization": {
+      "enabled": false,
+      "input_bits": 8,
+      "output_bits": 8
+    },
+    "checkpoint_sha256": "523e42e50742066b7b2faf187b4fb13c55f613eebf51a8a5b0da0aa0d7a9d604",
+    "training_validation_accuracy": 0.9799,
+    "evaluation_split_used_for_selection": true,
+    "training": {
+      "trial": 14,
+      "epochs": 50,
+      "batch_size": 128,
+      "hyperparameters": {
+        "label_smoothing": 0.0517045509616724,
+        "lr": 0.001413394986752222,
+        "tia_r": 633383.1162300591,
+        "w_init_max": 0.17500165934959674,
+        "weight_decay": 6.540209687922175e-05
+      },
+      "best_epoch": 41
+    },
+    "method": "device_response_training"
+  }
+}

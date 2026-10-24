@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "architecture": "VGG8",
+  "dataset": "CIFAR-10",
+  "device": "FeFET",
+  "device_parameters": {
+    "A_lk": 0.832635,
+    "B_lk": 1.289047,
+    "I_S": 6.37517,
+    "U_T": 0.026,
+    "V_D": 0.1,
+    "V_sat": 5.0,
+    "direct_conv_enabled": true,
+    "fast_chunk_m": 1024,
+    "init_center": 2.5,
+    "lut_bf16_output": true,
+    "lut_enabled": true,
+    "lut_size": 512,
+    "lut_x_max": 4.0,
+    "lut_x_min": -5.0,
+    "n": 1.03653,
+    "op_calibration_center": 2.5,
+    "op_calibration_enabled": true,
+    "op_calibration_max": 4.0,
+    "op_calibration_min": 0.0,
+    "op_calibration_scale": 0.02,
+    "output_gain": 0.01,
+    "surrogate_A_lk": 0.1,
+    "surrogate_B_lk": 1.289047,
+    "surrogate_backward_alpha": 1.0,
+    "surrogate_backward_enabled": true,
+    "theta_sat": 2.562803,
+    "w_max": 5.0,
+    "w_min": 0.0,
+    "conv_backend": "lut",
+    "linear_backend": "lut",
+    "calibration_slots": true
+  },
+  "model_parameters": {
+    "tia_r": 41116.02082577505,
+    "w_init_max": 0.2500514486795255,
+    "v_min": 0.0,
+    "v_max": 4.0
+  },
+  "quantization": {
+    "enabled": false,
+    "input_bits": 8,
+    "output_bits": 8
+  },
+  "checkpoint_sha256": "a627140866b0e3cd16e4e1de63b1abfe1de9eb8d76070c04c41da8f8e86dc857",
+  "training_validation_accuracy": 0.887,
+  "evaluation_split_used_for_selection": true,
+  "training": {
+    "trial": 17,
+    "epochs": 200,
+    "batch_size": 128,
+    "hyperparameters": {
+      "label_smoothing": 0.05964266836261867,
+      "lr": 0.00047417036631410117,
+      "tia_r": 41116.02082577505,
+      "w_init_max": 0.2500514486795255,
+      "weight_decay": 7.0199035484623174e-06
+    },
+    "best_epoch": 197
+  },
+  "method": "surrogate_gradient_with_gate_calibration"
+}

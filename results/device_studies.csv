@@ -1,0 +1,13 @@
+id,architecture,dataset,device,trial,best_epoch,training_validation_accuracy,reevaluated_accuracy,examples,difference_percentage_points,backend,sha256,file,paper_figure
+mnist-mlp-reram,MLP,MNIST,ReRAM,0,47,0.9795,0.9795,10000,0.0,reference,2c69c2c880c2a7cb42f68b88af3b2b12b08b32e8739b1640fd8ed975422ae091,mnist-mlp/reram/model.pth,
+mnist-mlp-pcm,MLP,MNIST,PCM,14,41,0.9799,0.9799,10000,0.0,planar,523e42e50742066b7b2faf187b4fb13c55f613eebf51a8a5b0da0aa0d7a9d604,mnist-mlp/pcm/model.pth,
+mnist-mlp-pcm-fig-s9,MLP,MNIST,PCM,11,46,0.9732,0.9732,10000,0.0,planar,96b8c4708afcc07e32bee091da40e4e3e411f8874be468666e8c2ea78ba88abd,paper/figure-s9/pcm/model.pth,S9
+mnist-mlp-stt,MLP,MNIST,STT,8,49,0.9718,0.9718,10000,0.0,reference,6a6a71183ec41c705a6bc775e47a822514ae1bb5ad3251c13de551e457a07409,mnist-mlp/stt/model.pth,
+mnist-mlp-flash,MLP,MNIST,Flash,13,23,0.9669,0.9669,10000,0.0,reference,c8e6ff86e0005824b8476b47b4266dba98bf9e1d1f797e202c4316456cf8a368,mnist-mlp/flash/model.pth,
+mnist-mlp-fefet,MLP,MNIST,FeFET,0,43,0.9758,0.9758,10000,0.0,lut,49f72b8ae1ca74892a2cdcb77ab29291ca178f56f5afe516f87e46a850807b34,mnist-mlp/fefet/model.pth,
+cifar10-vgg8-reram,VGG8,CIFAR-10,ReRAM,2,190,0.875,0.875,10000,0.0,reference,a72c4fdf3fa567fca7e9ab78dd3d306411427c69ed15b4bad0d9060b6ebfbb9e,cifar10-vgg8/reram/model.pth,
+cifar10-vgg8-pcm,VGG8,CIFAR-10,PCM,12,177,0.9203,0.9202,10000,-0.009999999999998899,planar,7186be82c649546cb14005a2ca28c9c2982c4a24f981c05563d379926c959909,cifar10-vgg8/pcm/model.pth,
+cifar10-vgg8-pcm-fig-s10,VGG8,CIFAR-10,PCM,6,123,0.8971,0.8971,10000,0.0,planar,cc06ff471a726ed155bcac0f18d1e91d6e7d809b0d69b768f9020e9dac11431e,paper/figure-s10/pcm/model.pth,S10
+cifar10-vgg8-stt,VGG8,CIFAR-10,STT,17,170,0.8922,0.8922,10000,0.0,reference,bb28c72c7b6bc68858448e350ccb90e57eef5fc42609490ea03d9172e729a915,cifar10-vgg8/stt/model.pth,
+cifar10-vgg8-flash,VGG8,CIFAR-10,Flash,10,182,0.9014,0.9015,10000,0.009999999999998899,polynomial,e4dbdf39f42d2949c8a07cecdf2f4b390a879157f33e91771b649dd3b3d260fb,cifar10-vgg8/flash/model.pth,
+cifar10-vgg8-fefet,VGG8,CIFAR-10,FeFET,17,197,0.887,0.887,10000,0.0,lut,a627140866b0e3cd16e4e1de63b1abfe1de9eb8d76070c04c41da8f8e86dc857,cifar10-vgg8/fefet/model.pth,

@@ -24,6 +24,7 @@ import math
 import torch.nn as nn
 
 from isa.kernels.device_sweep.custom_layers import NVM_Conv2d, NVM_Linear
+from .peripherals import FixedOutputGain, gate_calibration
 from .tia_layer import TIA_Layer
 from .quantization import quantize_input, quantize_output
 
@@ -35,11 +36,20 @@ class VGG8(nn.Module):
         super().__init__()
         self.in_v_min = v_min
         self.in_v_max = v_max
+        params = device_params or {}
+        op_cal_enabled = device_type == "fefet" and bool(params.get("op_calibration_enabled", False))
+        calibration_slots = bool(params.get("calibration_slots", op_cal_enabled))
+        if op_cal_enabled and not calibration_slots:
+            raise ValueError("FeFET gate calibration requires calibration_slots=true")
         tia_v_min, tia_v_max = (
             (-4.0, 4.0)
             if device_type in {"fefet", "flash"}
             else (v_min, v_max)
         )
+        tia_v_min = float(params.get("tia_v_min", tia_v_min))
+        tia_v_max = float(params.get("tia_v_max", tia_v_max))
+        if tia_v_min >= tia_v_max:
+            raise ValueError("Invalid TIA voltage interval")
         def _scaled_tia_r(fan_in: int) -> float:
             return tia_r / math.sqrt(float(fan_in))
 
@@ -65,36 +75,37 @@ class VGG8(nn.Module):
                 v_max=tia_v_max,
             )
 
-        self.features = nn.Sequential(
-            _conv(3, 128),    _tia2d(128, 3 * 3 * 3),
-            _conv(128, 128),  _tia2d(128, 128 * 3 * 3),
-            nn.MaxPool2d(2, 2),
+        features = []
+        channels = ((3, 128), (128, 128), (128, 256), (256, 256), (256, 512), (512, 512))
+        for index, (ci, co) in enumerate(channels):
+            features.extend((_conv(ci, co), _tia2d(co, ci * 3 * 3)))
+            if calibration_slots:
+                features.append(gate_calibration(device_type, params))
+            if index % 2 == 1:
+                features.append(nn.MaxPool2d(2, 2))
+        self.features = nn.Sequential(*features)
 
-            _conv(128, 256),  _tia2d(256, 128 * 3 * 3),
-            _conv(256, 256),  _tia2d(256, 256 * 3 * 3),
-            nn.MaxPool2d(2, 2),
-
-            _conv(256, 512),  _tia2d(512, 256 * 3 * 3),
-            _conv(512, 512),  _tia2d(512, 512 * 3 * 3),
-            nn.MaxPool2d(2, 2),
-        )
-
-        self.classifier = nn.Sequential(
+        classifier = [
             NVM_Linear(512 * 4 * 4, 1024,
                        device_type=device_type,
                        device_params=device_params,
                        w_init_max=w_init_max),
             _tia1d(1024, 512 * 4 * 4),
-
+        ]
+        if calibration_slots:
+            classifier.append(gate_calibration(device_type, params))
+        classifier.append(
             NVM_Linear(1024, 10,
                        device_type=device_type,
                        device_params=device_params,
                        w_init_max=w_init_max),
         )
+        self.classifier = nn.Sequential(*classifier)
+        self.output_gain = FixedOutputGain(params.get("output_gain", 1.0))
 
     def forward(self, x):
         x = quantize_input(x, self.in_v_min, self.in_v_max)
         x = self.features(x)
         x = x.flatten(1)
-        logits = self.classifier(x)
+        logits = self.output_gain(self.classifier(x))
         return quantize_output(logits, -1.0, 1.0)

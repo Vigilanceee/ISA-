@@ -1,0 +1,75 @@
+{
+  "architecture": "VGG8",
+  "dataset": "CIFAR-10",
+  "device": "PCM",
+  "checkpoint_sha256": "cc06ff471a726ed155bcac0f18d1e91d6e7d809b0d69b768f9020e9dac11431e",
+  "strict_load": true,
+  "examples": 10000,
+  "correct": 8971,
+  "accuracy": 0.8971,
+  "cross_entropy": 0.9520076522827149,
+  "training_validation_accuracy": 0.8971,
+  "difference_percentage_points": 0.0,
+  "dataset_split": "official_test",
+  "used_for_checkpoint_selection": true,
+  "elapsed_seconds": 3.0594355538487434,
+  "runtime": {
+    "python": "3.10.12",
+    "torch": "2.3.0a0+6ddf5cf85e.nv24.04",
+    "cuda": "12.4",
+    "gpu": "NVIDIA H100 80GB HBM3"
+  },
+  "configuration": {
+    "schema_version": 1,
+    "architecture": "VGG8",
+    "dataset": "CIFAR-10",
+    "device": "PCM",
+    "device_parameters": {
+      "I0_pcm": 3976.6,
+      "I0_pcm_decay": 53.6321,
+      "V_T_pcm": 1.0,
+      "chunk_n": 32,
+      "init_center": 0.02,
+      "lut_enabled": false,
+      "lut_v_max": 1.0,
+      "lut_v_min": -1.0,
+      "lut_v_size": 512,
+      "lut_w_size": 512,
+      "planar_enabled": true,
+      "planar_order": 7,
+      "w_max": 0.12,
+      "w_min": 0.0,
+      "conv_backend": "planar",
+      "linear_backend": "planar",
+      "calibration_slots": false
+    },
+    "model_parameters": {
+      "tia_r": 1490257.9890318373,
+      "w_init_max": 0.03991754107399188,
+      "v_min": -1.0,
+      "v_max": 1.0
+    },
+    "quantization": {
+      "enabled": false,
+      "input_bits": 8,
+      "output_bits": 8
+    },
+    "checkpoint_sha256": "cc06ff471a726ed155bcac0f18d1e91d6e7d809b0d69b768f9020e9dac11431e",
+    "training_validation_accuracy": 0.8971,
+    "evaluation_split_used_for_selection": true,
+    "training": {
+      "trial": 6,
+      "epochs": 200,
+      "batch_size": 128,
+      "hyperparameters": {
+        "label_smoothing": 0.09947404590745684,
+        "lr": 0.00022465606854522684,
+        "tia_r": 1490257.9890318373,
+        "w_init_max": 0.03991754107399188,
+        "weight_decay": 0.0004253893635523538
+      },
+      "best_epoch": 123
+    },
+    "method": "device_response_training"
+  }
+}

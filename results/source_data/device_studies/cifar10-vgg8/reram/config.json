@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "architecture": "VGG8",
+  "dataset": "CIFAR-10",
+  "device": "ReRAM",
+  "device_parameters": {
+    "I0": 200.0,
+    "V0": 0.35,
+    "g0": 0.15,
+    "g_max": 1.7,
+    "g_min": 0.2,
+    "init_center": 0.5,
+    "w_max": 1.7,
+    "w_min": 0.2,
+    "conv_backend": "reference",
+    "linear_backend": "reference",
+    "calibration_slots": false
+  },
+  "model_parameters": {
+    "tia_r": 461.3235717029712,
+    "w_init_max": 0.05940663019460345,
+    "v_min": -1.0,
+    "v_max": 1.0
+  },
+  "quantization": {
+    "enabled": false,
+    "input_bits": 8,
+    "output_bits": 8
+  },
+  "checkpoint_sha256": "a72c4fdf3fa567fca7e9ab78dd3d306411427c69ed15b4bad0d9060b6ebfbb9e",
+  "training_validation_accuracy": 0.875,
+  "evaluation_split_used_for_selection": true,
+  "training": {
+    "trial": 2,
+    "epochs": 200,
+    "batch_size": 128,
+    "hyperparameters": {
+      "label_smoothing": 0.012038667898122036,
+      "lr": 0.00015978500280667093,
+      "tia_r": 461.3235717029712,
+      "w_init_max": 0.05940663019460345,
+      "weight_decay": 7.221754885606202e-05
+    },
+    "best_epoch": 190
+  },
+  "method": "device_response_training"
+}

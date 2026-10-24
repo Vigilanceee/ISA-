@@ -1,0 +1,75 @@
+{
+  "architecture": "VGG8",
+  "dataset": "CIFAR-10",
+  "device": "PCM",
+  "checkpoint_sha256": "7186be82c649546cb14005a2ca28c9c2982c4a24f981c05563d379926c959909",
+  "strict_load": true,
+  "examples": 10000,
+  "correct": 9202,
+  "accuracy": 0.9202,
+  "cross_entropy": 0.327161880159378,
+  "training_validation_accuracy": 0.9203,
+  "difference_percentage_points": -0.009999999999998899,
+  "dataset_split": "official_test",
+  "used_for_checkpoint_selection": true,
+  "elapsed_seconds": 3.6332450825721025,
+  "runtime": {
+    "python": "3.10.12",
+    "torch": "2.3.0a0+6ddf5cf85e.nv24.04",
+    "cuda": "12.4",
+    "gpu": "NVIDIA H100 80GB HBM3"
+  },
+  "configuration": {
+    "schema_version": 1,
+    "architecture": "VGG8",
+    "dataset": "CIFAR-10",
+    "device": "PCM",
+    "device_parameters": {
+      "I0_pcm": 1.0,
+      "V_T_pcm": 1.0,
+      "chunk_n": 32,
+      "init_center": 0.5,
+      "lut_enabled": false,
+      "lut_v_max": 1.0,
+      "lut_v_min": -1.0,
+      "lut_v_size": 512,
+      "lut_w_size": 512,
+      "planar_enabled": true,
+      "planar_order": 7,
+      "w_max": 1.0,
+      "w_min": 0.0,
+      "conv_backend": "planar",
+      "linear_backend": "planar",
+      "state_mapping": "tanh",
+      "calibration_slots": false
+    },
+    "model_parameters": {
+      "tia_r": 6983712.947601713,
+      "w_init_max": 0.012674462574925034,
+      "v_min": -1.0,
+      "v_max": 1.0
+    },
+    "quantization": {
+      "enabled": false,
+      "input_bits": 8,
+      "output_bits": 8
+    },
+    "checkpoint_sha256": "7186be82c649546cb14005a2ca28c9c2982c4a24f981c05563d379926c959909",
+    "training_validation_accuracy": 0.9203,
+    "evaluation_split_used_for_selection": true,
+    "training": {
+      "trial": 12,
+      "epochs": 200,
+      "batch_size": 128,
+      "hyperparameters": {
+        "label_smoothing": 0.07904955752057284,
+        "lr": 0.00044810278705100756,
+        "tia_r": 6983712.947601713,
+        "w_init_max": 0.012674462574925034,
+        "weight_decay": 3.713135002235672e-05
+      },
+      "best_epoch": 177
+    },
+    "method": "device_response_training"
+  }
+}

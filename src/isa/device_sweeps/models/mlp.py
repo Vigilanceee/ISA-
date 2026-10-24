@@ -10,33 +10,9 @@ MLP 网络  —— 使用 NVM 物理器件层 + TIA 构建
 import torch.nn as nn
 
 from isa.kernels.device_sweep.custom_layers import NVM_Linear
+from .peripherals import FixedGateCalibration, FixedOutputGain, gate_calibration
 from .tia_layer import TIA_Layer
 from .quantization import quantize_input, quantize_output
-
-
-class FixedGateCalibration(nn.Module):
-    """Fixed peripheral bias/gain mapping for FeFET gate operating point."""
-
-    def __init__(self, center: float, scale: float, v_min: float, v_max: float):
-        super().__init__()
-        self.center = float(center)
-        self.scale = float(scale)
-        self.v_min = float(v_min)
-        self.v_max = float(v_max)
-
-    def forward(self, x):
-        return (self.center + self.scale * x).clamp(self.v_min, self.v_max)
-
-
-class FixedOutputGain(nn.Module):
-    """Fixed readout gain used after the final FeFET current aggregation."""
-
-    def __init__(self, gain: float):
-        super().__init__()
-        self.gain = float(gain)
-
-    def forward(self, x):
-        return x * self.gain
 
 
 class MLP(nn.Module):
@@ -50,27 +26,24 @@ class MLP(nn.Module):
             device_type == "fefet"
             and bool((device_params or {}).get("op_calibration_enabled", False))
         )
-        op_center = float((device_params or {}).get("op_calibration_center", 2.5))
-        op_scale = float((device_params or {}).get("op_calibration_scale", 1.0))
-        op_min = float((device_params or {}).get("op_calibration_min", 0.0))
-        op_max = float((device_params or {}).get("op_calibration_max", 4.0))
+        calibration_slots = bool((device_params or {}).get("calibration_slots", True))
+        if op_cal_enabled and not calibration_slots:
+            raise ValueError("FeFET gate calibration requires calibration_slots=true")
         output_gain = float((device_params or {}).get("output_gain", 1.0))
 
         def _tia():
             return TIA_Layer(tia_r, nn.Identity(),
-                             v_min=-4.0, v_max=4.0)
+                             v_min=float((device_params or {}).get("tia_v_min", -4.0)),
+                             v_max=float((device_params or {}).get("tia_v_max", 4.0)))
 
-        def _op_cal():
-            if not op_cal_enabled:
-                return nn.Identity()
-            return FixedGateCalibration(op_center, op_scale, op_min, op_max)
-
-        self.classifier = nn.Sequential(
+        layers = [
             NVM_Linear(784, 128, device_type, device_params, w_init_max),
             _tia(),
-            _op_cal(),
-            NVM_Linear(128, 10, device_type, device_params, w_init_max),
-        )
+        ]
+        if calibration_slots:
+            layers.append(gate_calibration(device_type, device_params or {}))
+        layers.append(NVM_Linear(128, 10, device_type, device_params, w_init_max))
+        self.classifier = nn.Sequential(*layers)
         self.output_gain = FixedOutputGain(output_gain)
 
     def forward(self, x):

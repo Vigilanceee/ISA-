@@ -1,0 +1,67 @@
+{
+  "architecture": "VGG8",
+  "dataset": "CIFAR-10",
+  "device": "STT",
+  "checkpoint_sha256": "bb28c72c7b6bc68858448e350ccb90e57eef5fc42609490ea03d9172e729a915",
+  "strict_load": true,
+  "examples": 10000,
+  "correct": 8922,
+  "accuracy": 0.8922,
+  "cross_entropy": 0.47648978090286254,
+  "training_validation_accuracy": 0.8922,
+  "difference_percentage_points": 0.0,
+  "dataset_split": "official_test",
+  "used_for_checkpoint_selection": true,
+  "elapsed_seconds": 2.76936362311244,
+  "runtime": {
+    "python": "3.10.12",
+    "torch": "2.3.0a0+6ddf5cf85e.nv24.04",
+    "cuda": "12.4",
+    "gpu": "NVIDIA H100 80GB HBM3"
+  },
+  "configuration": {
+    "schema_version": 1,
+    "architecture": "VGG8",
+    "dataset": "CIFAR-10",
+    "device": "STT",
+    "device_parameters": {
+      "I0_stt": 331.0,
+      "TMR": 1.2,
+      "alpha": 0.79,
+      "init_center": 1.5707963,
+      "w_max": 3.1415926,
+      "w_min": 0.0,
+      "conv_backend": "reference",
+      "linear_backend": "reference",
+      "calibration_slots": false
+    },
+    "model_parameters": {
+      "tia_r": 2950.9413360370554,
+      "w_init_max": 0.08371308436093254,
+      "v_min": -1.0,
+      "v_max": 1.0
+    },
+    "quantization": {
+      "enabled": false,
+      "input_bits": 8,
+      "output_bits": 8
+    },
+    "checkpoint_sha256": "bb28c72c7b6bc68858448e350ccb90e57eef5fc42609490ea03d9172e729a915",
+    "training_validation_accuracy": 0.8922,
+    "evaluation_split_used_for_selection": true,
+    "training": {
+      "trial": 17,
+      "epochs": 200,
+      "batch_size": 128,
+      "hyperparameters": {
+        "label_smoothing": 0.03778936124171878,
+        "lr": 0.0010000010116877473,
+        "tia_r": 2950.9413360370554,
+        "w_init_max": 0.08371308436093254,
+        "weight_decay": 1.0915706868718523e-06
+      },
+      "best_epoch": 170
+    },
+    "method": "device_response_training"
+  }
+}

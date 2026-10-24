@@ -1,0 +1,67 @@
+{
+  "architecture": "MLP",
+  "dataset": "MNIST",
+  "device": "STT",
+  "checkpoint_sha256": "6a6a71183ec41c705a6bc775e47a822514ae1bb5ad3251c13de551e457a07409",
+  "strict_load": true,
+  "examples": 10000,
+  "correct": 9718,
+  "accuracy": 0.9718,
+  "cross_entropy": 0.142371662658453,
+  "training_validation_accuracy": 0.9718,
+  "difference_percentage_points": 0.0,
+  "dataset_split": "official_test",
+  "used_for_checkpoint_selection": true,
+  "elapsed_seconds": 2.355094186961651,
+  "runtime": {
+    "python": "3.10.12",
+    "torch": "2.3.0a0+6ddf5cf85e.nv24.04",
+    "cuda": "12.4",
+    "gpu": "NVIDIA H100 80GB HBM3"
+  },
+  "configuration": {
+    "schema_version": 1,
+    "architecture": "MLP",
+    "dataset": "MNIST",
+    "device": "STT",
+    "device_parameters": {
+      "I0_stt": 331.0,
+      "TMR": 1.2,
+      "alpha": 0.79,
+      "init_center": 1.5707963,
+      "w_max": 3.1415926,
+      "w_min": 0.0,
+      "conv_backend": "reference",
+      "linear_backend": "reference",
+      "calibration_slots": false
+    },
+    "model_parameters": {
+      "tia_r": 10497.143746323101,
+      "w_init_max": 0.13888446444907498,
+      "v_min": -1.0,
+      "v_max": 1.0
+    },
+    "quantization": {
+      "enabled": false,
+      "input_bits": 8,
+      "output_bits": 8
+    },
+    "checkpoint_sha256": "6a6a71183ec41c705a6bc775e47a822514ae1bb5ad3251c13de551e457a07409",
+    "training_validation_accuracy": 0.9718,
+    "evaluation_split_used_for_selection": true,
+    "training": {
+      "trial": 8,
+      "epochs": 50,
+      "batch_size": 128,
+      "hyperparameters": {
+        "label_smoothing": 0.04789981096259363,
+        "lr": 0.00015344224492314204,
+        "tia_r": 10497.143746323101,
+        "w_init_max": 0.13888446444907498,
+        "weight_decay": 2.2320738921263044e-06
+      },
+      "best_epoch": 49
+    },
+    "method": "device_response_training"
+  }
+}

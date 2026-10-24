@@ -3,6 +3,11 @@
 The default MLP/VGG8 sweep evaluates the five physical response equations
 below. Currents are represented internally in microamperes.
 
+Released checkpoints specify their own fitted coefficients, state mapping,
+numerical response operator and calibration in `config.json`. Those settings
+take precedence when reproducing a checkpoint; the generic sweep defaults
+below are not substitutes. See [checkpoint reproduction](reproducing_device_studies.md).
+
 ## ReRAM
 
 `I(V,g) = I0 exp(-g/g0) sinh(V/V0)`, with `I0=200 μA`, `g0=0.15 nm`, and

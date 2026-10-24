@@ -6,6 +6,8 @@ BACKENDS = (
     "exact",
     "reference",
     "lut",
+    "planar",
+    "polynomial",
     "factorized",
     "node_planar",
 )
@@ -25,13 +27,31 @@ def select_primitive_backend(
     if explicit_backend:
         if explicit_backend not in BACKENDS:
             raise ValueError(f"Unsupported NVM backend: {explicit_backend}")
-        return "lut" if explicit_backend == "lut" else "reference"
+        if explicit_backend in {"lut", "planar", "polynomial"}:
+            return explicit_backend
+        return "reference"
     params = device_params or {}
+    if bool(params.get("poly_enabled", False)):
+        return "polynomial"
     if bool(params.get("planar_enabled", False)):
         return "planar"
     if bool(params.get("lut_enabled", False)):
         return "lut"
     return "reference"
+
+
+def configured_layer_backend(params: dict, layer: str) -> str:
+    """Resolve a layer backend, including configurations saved with flags only."""
+
+    if layer not in {"conv", "linear"}:
+        raise ValueError(f"Unknown layer kind: {layer}")
+    explicit = params.get(f"{layer}_backend")
+    if explicit is None and layer == "linear":
+        explicit = params.get("conv_backend")
+    if explicit:
+        select_primitive_backend(params, str(explicit))
+        return str(explicit)
+    return select_primitive_backend(params, None)
 
 
 def normalize_backend_parameters(
@@ -55,5 +75,6 @@ def normalize_backend_parameters(
         raise ValueError(f"Unsupported NVM backend(s): {sorted(unknown)}")
 
     resolved["lut_enabled"] = "lut" in {conv, linear}
-    resolved["planar_enabled"] = False
+    resolved["planar_enabled"] = "planar" in {conv, linear}
+    resolved["poly_enabled"] = "polynomial" in {conv, linear}
     return resolved

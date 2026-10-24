@@ -23,6 +23,8 @@ checkpoints/*
 !checkpoints/README.md
 !checkpoints/manifest.json
 !checkpoints/release_validation.json
+!checkpoints/device_manifest.json
+!checkpoints/device_studies.json
 benchmark_data/
 benchmark_results/
 *.pt

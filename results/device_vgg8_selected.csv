@@ -1,5 +1,6 @@
-architecture,dataset,device,trial,best_epoch,metric,split,value,checkpoint_repository,checkpoint_path,checkpoint_sha256
-VGG8,CIFAR-10,ReRAM,2,190,top1_accuracy,validation,0.8750,Viligance/ISA-Device-Checkpoints,cifar10-vgg8/reram/model.pth,a72c4fdf3fa567fca7e9ab78dd3d306411427c69ed15b4bad0d9060b6ebfbb9e
-VGG8,CIFAR-10,PCM,12,177,top1_accuracy,validation,0.9203,Viligance/ISA-Device-Checkpoints,cifar10-vgg8/pcm/model.pth,7186be82c649546cb14005a2ca28c9c2982c4a24f981c05563d379926c959909
-VGG8,CIFAR-10,STT,17,170,top1_accuracy,validation,0.8922,Viligance/ISA-Device-Checkpoints,cifar10-vgg8/stt/model.pth,bb28c72c7b6bc68858448e350ccb90e57eef5fc42609490ea03d9172e729a915
-VGG8,CIFAR-10,Flash,10,182,top1_accuracy,validation,0.9014,Viligance/ISA-Device-Checkpoints,cifar10-vgg8/flash/model.pth,e4dbdf39f42d2949c8a07cecdf2f4b390a879157f33e91771b649dd3b3d260fb
+device,trial,best_epoch,validation_top1_accuracy,reevaluated_accuracy,sha256,file
+ReRAM,2,190,0.875,0.875,a72c4fdf3fa567fca7e9ab78dd3d306411427c69ed15b4bad0d9060b6ebfbb9e,cifar10-vgg8/reram/model.pth
+PCM,12,177,0.9203,0.9202,7186be82c649546cb14005a2ca28c9c2982c4a24f981c05563d379926c959909,cifar10-vgg8/pcm/model.pth
+STT,17,170,0.8922,0.8922,bb28c72c7b6bc68858448e350ccb90e57eef5fc42609490ea03d9172e729a915,cifar10-vgg8/stt/model.pth
+Flash,10,182,0.9014,0.9015,e4dbdf39f42d2949c8a07cecdf2f4b390a879157f33e91771b649dd3b3d260fb,cifar10-vgg8/flash/model.pth
+FeFET,17,197,0.887,0.887,a627140866b0e3cd16e4e1de63b1abfe1de9eb8d76070c04c41da8f8e86dc857,cifar10-vgg8/fefet/model.pth
